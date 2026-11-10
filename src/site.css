@@ -49,6 +49,12 @@ button,input,textarea,select{font:inherit;color:inherit}
           mask-image:radial-gradient(circle var(--beam) at var(--mx,60%) var(--my,22%),#000 0,#000 34%,transparent 100%)}
 .lit-text{color:var(--dim);background:radial-gradient(circle calc(var(--beam)*1.25) at var(--mx,50%) var(--my,0%),var(--ink) 0,var(--ink) 30%,var(--dim) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 
+/* spot switched off (site.js SPOT=false): even stage wash, nothing follows the pointer */
+.no-spot .pool,.no-spot .lit__on{display:none}
+.no-spot .lit__dim,.no-spot .off__fig .lit__dim,.no-spot .about__fig .lit__dim{filter:brightness(.88) contrast(1.04)}
+.no-spot .lit-text{background:none;-webkit-text-fill-color:currentColor;color:var(--ink)}
+.no-spot .cue::before{background:rgba(255,244,224,.06)}
+
 /* curtain: blackout between pages */
 .curtain{position:fixed;inset:0;z-index:90;background:#000;pointer-events:none;opacity:0}
 .js .curtain{opacity:1}

@@ -21,6 +21,8 @@
   }
   gsap.registerPlugin(ScrollTrigger, SplitText);
   const EASE = 'expo.out';
+  const SPOT = false;   // follow-spot that tracks the pointer. Off for now; set true to bring it back.
+  if (!SPOT) html.classList.add('no-spot');
 
   /* smooth scroll on the shared ticker */
   const lenis = new Lenis({ autoRaf: false, lerp: 0.12, anchors: true });
@@ -54,7 +56,7 @@
     return { x: innerWidth * 0.5, y: innerHeight * 0.42, rx: innerWidth * 0.3, ry: innerHeight * 0.18 };
   }
 
-  gsap.ticker.add((time) => {
+  SPOT && gsap.ticker.add((time) => {
     if (document.hidden) return;
     const idle = !pointerIn || performance.now() - lastMove > 2400;
     if (idle) {                           // idle state: a slow figure around the home mark
@@ -85,6 +87,7 @@
       .to(light, { on: 1, duration: 0.07, ease: 'none' }, 0.12)      // snap on
       .to(light, { on: 0.35, duration: 0.05, ease: 'none' })          // filament dip
       .to(light, { on: 1, duration: 0.5 })
+      .fromTo('.no-spot .lit img', { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' }, 0.1)
       .fromTo('[data-intro="clip"]', { clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(-10% 0 -10% 0)', duration: 1.1, stagger: 0.08 }, 0.18)
       .fromTo('[data-intro="in"]', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.06 }, 0.35);
     return tl;
@@ -163,7 +166,7 @@
       b.style.setProperty('--bx', e.clientX - r.left + 'px'); b.style.setProperty('--by', e.clientY - r.top + 'px');
     }));
     // cue rows: the lamp follows along the row
-    $$('.cue').forEach((c) => c.addEventListener('pointermove', (e) => {
+    !html.classList.contains('no-spot') && $$('.cue').forEach((c) => c.addEventListener('pointermove', (e) => {
       c.style.setProperty('--rx', e.clientX - c.getBoundingClientRect().left + 'px');
     }, { passive: true }));
     // phone menu

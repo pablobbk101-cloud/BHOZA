@@ -34,3 +34,6 @@ What I do: title / six cue blocks alternating col 1 and col 7 / call.
 About: split portrait + bio / pull quote / cue history table.
 Book: split form + direct lines.
 404: the spot searching an empty stage.
+
+## Change log
+- Pointer-tracking follow-spot switched off at the client's request (`SPOT = false` in src/site.js). Portraits and headlines are evenly lit; the code path is kept so it can return later.
