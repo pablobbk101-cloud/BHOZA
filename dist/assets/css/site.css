@@ -52,16 +52,18 @@ button,input,textarea{font:inherit;color:inherit}
 
 /* curtain: a gold sheet cuts between pages */
 .curtain{position:fixed;inset:0;z-index:90;background:var(--hot);color:var(--black);display:grid;place-items:center;pointer-events:none;clip-path:inset(100% 0 0 0)}
-.curtain span{font-stretch:75%;font-weight:800;text-transform:uppercase;font-size:clamp(3rem,12vw,10rem);letter-spacing:-.02em;line-height:1}
+.curtain{--bz-acc:var(--bone)}
+.curtain span{font-size:clamp(4rem,17vw,13rem);line-height:1}
 .js .curtain{clip-path:inset(0 0 0 0)}
 
 /* header */
 .head{position:fixed;inset:0 0 auto 0;z-index:50;height:var(--head);display:flex;align-items:center;justify-content:space-between;padding-inline:var(--m);color:#f2ede4;--fg:#f2ede4;--bg:var(--black);--acc:var(--hot);transition:translate .5s var(--ease),background-color .3s}
 .head.is-solid{background:rgba(11,10,9,.94)}
 .head.is-away{translate:0 -100%}
-.mark{font-stretch:75%;font-weight:800;font-size:1.5rem;letter-spacing:-.01em;text-transform:uppercase;text-decoration:none;line-height:1;display:inline-flex;align-items:center;gap:.55rem;padding-block:.5rem}
-.mark i{width:.5rem;height:.5rem;border-radius:50%;background:var(--hot);box-shadow:0 0 .6rem rgba(255,74,43,.7);flex:none;transition:scale .5s var(--ease)}
-.mark:hover i{scale:1.6}
+.mark{text-decoration:none;display:inline-flex;align-items:center;padding-block:.6rem;line-height:1;color:inherit}
+.mark .bz{height:1.9rem;width:auto;display:block;overflow:visible}
+.bz .a{fill:var(--bz-acc,var(--hot))}
+.bz--c{height:.74em;width:auto;display:inline-block;vertical-align:-.04em;overflow:visible}
 .nav{display:flex;align-items:center;gap:clamp(1rem,2.2vw,2.25rem)}
 .nav a{position:relative;text-decoration:none;padding-block:.75rem;font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase}
 .nav a:not(.btn)::after{content:"";position:absolute;left:0;right:0;bottom:.45rem;height:2px;background:var(--hot);scale:0 1;transform-origin:left;transition:scale .45s var(--ease)}
@@ -274,7 +276,7 @@ fieldset.field{border-inline:0;border-bottom:0;margin:0;padding-inline:0;min-wid
   .nav a.btn::before{display:none}
   .nav a:not(.btn)::after{bottom:.1rem;height:4px;background:var(--black)}
   .head.is-menu{translate:none;transition:none;background:transparent;color:var(--black)}
-  .head.is-menu .mark i{background:var(--black)}
+  .head.is-menu{--bz-acc:var(--bone)}
   .sides__frame{left:0;width:100%;margin-left:0}
   .sides__frame::after{height:70%}
   .sides__side{display:none}

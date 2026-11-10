@@ -43,6 +43,7 @@ const ALT = {
 /* ---------- partials ---------- */
 const arr = '<span class="arr" aria-hidden="true">&rarr;</span>';
 const sq = '<i class="sq" aria-hidden="true"></i>';
+const LOGO = (f) => fs.readFileSync(`src/logo/${f}`, 'utf8');
 const nav = [['work.html', 'What I do'], ['about.html', 'About'], ['book.html', 'Book Bhoza']];
 const pic = (base, w, h, alt, { eager = false, sizes = '100vw', srcset, cls = '', par = false } = {}) =>
   `<picture><source type="image/webp" srcset="${srcset || `assets/img/${base}.webp`}" sizes="${sizes}"><img${cls ? ` class="${cls}"` : ''} src="assets/img/${base}.jpg" width="${w}" height="${h}" alt="${alt}"${eager ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async"${par ? ' data-par' : ''}></picture>`;
@@ -93,6 +94,7 @@ const layout = ({ file, title, desc, body }) => `<!DOCTYPE html>
 <meta property="og:url" content="${SITE}${file === 'index.html' ? '' : file}"><meta property="og:image" content="${SITE}assets/img/og.jpg">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@MissBhoza">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <link rel="preload" href="assets/fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
 <script>document.documentElement.classList.add('js');setTimeout(function(){if(!window.__ok)document.documentElement.classList.remove('js')},3500)</script>
 <link rel="stylesheet" href="assets/css/site.css">
@@ -103,7 +105,7 @@ const layout = ({ file, title, desc, body }) => `<!DOCTYPE html>
 <body class="t-dark">
 <a class="skip" href="#main">Skip to content</a>
 <header class="head">
-  <a class="mark" href="index.html" aria-label="Bhoza, home"><i aria-hidden="true"></i>Bhoza</a>
+  <a class="mark" href="index.html" aria-label="Bhoza, home">${LOGO('header-a.svg').replace('aria-label="Bhoza"','aria-hidden="true"').replace(' role="img"','')}</a>
   <nav class="nav" id="nav" aria-label="Main">
     ${nav.map(([u, t], i) => `<a href="${u}"${u === file ? ' aria-current="page"' : ''}${i === 2 ? ' class="btn"' : ''}>${t}</a>`).join('\n    ')}
   </nav>
@@ -117,7 +119,7 @@ const layout = ({ file, title, desc, body }) => `<!DOCTYPE html>
 ${body}
 </main>
 ${footer()}
-<div class="curtain" aria-hidden="true"><span>Bhoza</span></div>
+<div class="curtain" aria-hidden="true"><span>${LOGO('name-ca.svg')}</span></div>
 <script src="assets/js/gsap.min.js" defer></script>
 <script src="assets/js/ScrollTrigger.min.js" defer></script>
 <script src="assets/js/SplitText.min.js" defer></script>
@@ -159,7 +161,7 @@ const home = `
     </div></figure>
     <p class="sides__tag mono">Two sides.<br>One Bhoza.</p>
     <div class="sides__side"><p>The suit writes the strategy and signs the deal. The cap runs the night.</p></div>
-    <div class="sides__title"><h2><span class="sides__pre">Bhoza means</span><span class="swap"><span class="swap__a">business.</span><span class="swap__b">culture.</span></span></h2></div>
+    <div class="sides__title"><h2><span class="sides__pre"><span class="vh">Bhoza</span>${LOGO('name-ca.svg').replace(' role="img"',' aria-hidden="true"')} means</span><span class="swap"><span class="swap__a">business.</span><span class="swap__b">culture.</span></span></h2></div>
   </div>
 </section>
 
@@ -332,7 +334,7 @@ const pages = [
 for (const p of pages) fs.writeFileSync(`dist/${p.file}`, layout(p));
 fs.copyFileSync('src/site.css', 'dist/assets/css/site.css');
 fs.copyFileSync('src/site.js', 'dist/assets/js/site.js');
-fs.writeFileSync('dist/assets/img/favicon.svg', `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" fill="#0b0a09"/><rect x="9" y="9" width="14" height="14" fill="#ff4a2b"/></svg>`);
+fs.copyFileSync('src/logo/favicon.svg', 'dist/assets/img/favicon.svg'); fs.copyFileSync('src/logo/apple-touch-icon.png', 'dist/assets/img/apple-touch-icon.png');
 fs.writeFileSync('dist/robots.txt', `User-agent: *\nAllow: /\nSitemap: ${SITE}sitemap.xml\n`);
 fs.writeFileSync('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.filter((p) => p.file !== '404.html').map((p) => `  <url><loc>${SITE}${p.file === 'index.html' ? '' : p.file}</loc></url>`).join('\n')}\n</urlset>\n`);
 console.log('built', pages.map((p) => p.file).join(', '));
