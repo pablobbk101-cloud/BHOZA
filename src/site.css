@@ -10,9 +10,9 @@
   --ease:cubic-bezier(.16,1,.3,1);
 }
 /* themes: every block states its ground and ink; buttons and rules read from here */
-.t-dark{--bg:var(--black);--fg:#f2ede4;--mut:#9a9388;--line:#2e2b26;--acc:var(--hot);--em:var(--hot)}
-.t-char{--bg:var(--char);--fg:#f2ede4;--mut:#a8a195;--line:#3a362f;--acc:var(--hot);--em:var(--hot)}
-.t-bone{--bg:var(--bone);--fg:#0b0a09;--mut:#5a5349;--line:#c8bfad;--acc:var(--hot);--em:#0b0a09}
+.t-dark{--bg:var(--black);--fg:#f2ede4;--mut:#b3ac9f;--line:#2e2b26;--acc:var(--hot);--em:var(--hot)}
+.t-char{--bg:var(--char);--fg:#f2ede4;--mut:#bdb6a9;--line:#3a362f;--acc:var(--hot);--em:var(--hot)}
+.t-bone{--bg:var(--bone);--fg:#0b0a09;--mut:#4a443b;--line:#c8bfad;--acc:var(--hot);--em:#0b0a09}
 .t-hot{--bg:var(--hot);--fg:#0b0a09;--mut:#35110a;--line:rgba(11,10,9,.28);--acc:#f2ede4;--em:#0b0a09}
 .t-dark,.t-char,.t-bone,.t-hot{background:var(--bg);color:var(--fg)}
 
@@ -31,7 +31,7 @@ button,input,textarea{font:inherit;color:inherit}
 .skip:focus{translate:0 0}
 
 /* type roles */
-.mono{font-family:var(--mono);font-size:.75rem;line-height:1.35;letter-spacing:.07em;text-transform:uppercase}
+.mono{font-family:var(--mono);font-size:.8125rem;line-height:1.35;letter-spacing:.07em;text-transform:uppercase}
 .display{font-stretch:75%;font-weight:800;letter-spacing:-.012em;line-height:.9;text-wrap:balance}
 .d1{font-size:clamp(3.25rem,11vw,11.5rem);line-height:.86}
 .d2{font-size:clamp(2.5rem,6.6vw,6.25rem)}
@@ -45,7 +45,7 @@ button,input,textarea{font:inherit;color:inherit}
 .fit{display:block;white-space:nowrap}
 .fit__in{display:inline-block}
 .tags{display:flex;flex-wrap:wrap;gap:.4rem}
-.tags li{font-family:var(--mono);font-size:.6875rem;letter-spacing:.07em;text-transform:uppercase;border:1px solid var(--line);padding:.4rem .6rem;line-height:1.2}
+.tags li{font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;border:1px solid var(--line);padding:.4rem .6rem;line-height:1.2}
 .fig{overflow:hidden;background:#050504;position:relative}
 .fig img{width:100%;height:100%;object-fit:cover;object-position:var(--pos,50% 20%)}
 .cap{display:flex;justify-content:space-between;gap:1rem;margin-top:.75rem;color:var(--mut)}
@@ -65,7 +65,8 @@ button,input,textarea{font:inherit;color:inherit}
 .mark .bz{height:2rem;width:auto;display:block;overflow:visible}
 .bz{fill:currentColor}
 .bzn{white-space:nowrap}
-.btn .bzn .bz,.nav .bzn .bz,.mono .bzn .bz,.foot__col .bzn .bz{height:1.05em}
+.btn .bzn .bz,.nav .bzn .bz,.mono .bzn .bz,.foot__col .bzn .bz,.tags .bzn .bz{display:none}
+.btn .bzn .vh,.nav .bzn .vh,.mono .bzn .vh,.foot__col .bzn .vh,.tags .bzn .vh{position:static;width:auto;height:auto;overflow:visible;clip:auto}
 .bzn .bz{height:.82em;width:auto;display:inline-block;vertical-align:-.075em;overflow:visible}
 .dock__txt .bz{height:1.05em;vertical-align:-.12em}
 .t-hot{--bz-acc:var(--bone)}
@@ -73,7 +74,7 @@ button,input,textarea{font:inherit;color:inherit}
 .bz .a{fill:var(--bz-acc,var(--hot))}
 .bz--c{height:.74em;width:auto;display:inline-block;vertical-align:-.04em;overflow:visible}
 .nav{display:flex;align-items:center;gap:clamp(1rem,2.2vw,2.25rem)}
-.nav a{position:relative;text-decoration:none;padding-block:.75rem;font-family:var(--mono);font-size:.75rem;letter-spacing:.07em;text-transform:uppercase}
+.nav a{position:relative;text-decoration:none;padding-block:.75rem;font-family:var(--mono);font-size:.8125rem;letter-spacing:.07em;text-transform:uppercase}
 .nav a:not(.btn)::after{content:"";position:absolute;left:0;right:0;bottom:.45rem;height:2px;background:var(--hot);scale:0 1;transform-origin:left;transition:scale .45s var(--ease)}
 .nav a:not(.btn):hover::after,.nav a[aria-current="page"]::after{scale:1 1}
 .menu-btn{display:none}
@@ -355,6 +356,10 @@ fieldset.field{border-inline:0;border-bottom:0;margin:0;padding-inline:0;min-wid
   .bill__line--d .fit{font-size:8.6vw}
   .story__copy{position:static;margin-top:2rem}
   .foot__col{grid-column:span 6}
+  .foot__col .h{display:block;margin-top:-.15rem}
+  .foot__col li{padding-block:.3rem}
+  .mono{font-size:.8125rem}
+  .tags li{font-size:.75rem}
   .side__label{position:static;margin-bottom:2.5rem}
   .side__label .fig{width:min(100%,16rem)}
   .dip__a{grid-column:1/7}.dip__b{grid-column:7/13;margin-top:3.5rem}
