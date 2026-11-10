@@ -171,7 +171,7 @@ const home = `
         <div class="grid poster__row">
           <p class="lede">${s.body}</p>
           <ul class="tags">${s.list.map((l) => `<li>${l}</li>`).join('')}</ul>
-          <a class="btn" href="work.html#${s.k}" aria-label="More on ${s.short}">More ${arr}</a>
+          <a class="btn btn--solid" href="work.html#${s.k}" aria-label="More on ${s.short}">More ${arr}</a>
         </div>
       </div>
     </article>`).join('\n    ')}
