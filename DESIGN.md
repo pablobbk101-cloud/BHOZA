@@ -48,3 +48,8 @@ Palette:     black #0b0a09, charcoal #1c1a17, bone #ece6d9, hot red #ff4a2b (the
 Type:        Bricolage Grotesque condensed 800 (poster caps), Bodoni Moda italic (the second voice), DM Mono (labels).
 Kept:        v1 hero, unchanged in layout, at the client's request. Dropped: cue bar, running-order list, feet crop.
 Sections:    hero / statement + ticker / two sides (pinned) / six stacked posters tagged Business or Culture / line-up bill / story with street photo / red footer.
+
+## Mobile layer (phone only, 900px and below)
+- The dock: fixed thumb-zone bar. Menu (opens a bottom-aligned red sheet) | live side label (Business / Culture, follows the pinned section and the poster rail) | Book. Steps aside when a form field is focused. Haptic tick on side flips and poster snaps (Android).
+- The rail: six services as a swipe deck (CSS scroll-snap, works without JS). Segmented bar below alternates black (business) and red (culture) to mirror the stack's order. Hint arrow nudges until first swipe.
+- Desktop and the v1 hero are untouched.

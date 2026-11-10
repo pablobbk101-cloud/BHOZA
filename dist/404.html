@@ -21,13 +21,17 @@
 <a class="skip" href="#main">Skip to content</a>
 <header class="head">
   <a class="mark" href="index.html" aria-label="Bhoza, home"><i aria-hidden="true"></i>Bhoza</a>
-  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav"><span>Menu</span><i aria-hidden="true"></i></button>
   <nav class="nav" id="nav" aria-label="Main">
     <a href="work.html">What I do</a>
     <a href="about.html">About</a>
     <a href="book.html" class="btn">Book Bhoza</a>
   </nav>
 </header>
+<aside class="dock" aria-label="Quick controls" data-dock-default="Lost">
+  <button class="dock__menu" type="button" aria-expanded="false" aria-controls="nav"><span>Menu</span><i aria-hidden="true"></i></button>
+  <p class="dock__side" aria-hidden="true" data-side=""><span class="dock__dot"></span><span class="dock__txt">Lost</span></p>
+  <a class="dock__book" href="book.html">Book <span class="arr" aria-hidden="true">&rarr;</span></a>
+</aside>
 <main id="main">
 
 <section class="lost wrap t-dark">
@@ -39,7 +43,7 @@
 </section>
 </main>
 
-<footer class="foot wrap t-hot">
+<footer class="foot wrap t-hot" data-dock="Book">
   <p class="foot__call" aria-hidden="true">Let's <span class="em">connect.</span></p>
   <div class="grid foot__row">
     <div class="foot__mail">

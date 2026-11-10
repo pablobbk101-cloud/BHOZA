@@ -40,7 +40,9 @@
   /* signature: scroll cuts the suit to the street, business to culture */
   function hero() {
     const el = $('[data-sides]'); if (!el) return;
-    gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: el, start: 'top top', end: 'bottom bottom', scrub: true, invalidateOnRefresh: true } })
+    let lastSide = 'Business';
+    gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: el, start: 'top top', end: 'bottom bottom', scrub: true, invalidateOnRefresh: true,
+        onUpdate: (self) => { const v = self.progress > 0.5 ? 'Culture' : 'Business'; if (v !== lastSide) { lastSide = v; document.dispatchEvent(new CustomEvent('bhoza:side', { detail: v })); } } } })
       .to('.sides__img--a', { scale: 1.08, duration: 0.8 }, 0)
       .fromTo('.sides__img--b', { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.55 }, 0.2)
       .to('.swap__a', { yPercent: -115, duration: 0.16, ease: 'power2.in' }, 0.36)
@@ -59,6 +61,7 @@
       tl.from(s.lines, { yPercent: 108, duration: 1, stagger: 0.07 }, 0.5);
     });
     if ($('[data-intro="clip"]')) tl.fromTo('[data-intro="clip"]', { yPercent: 108 }, { yPercent: 0, duration: 1.05, stagger: 0.09 }, 0.55);
+    if ($('.dock')) tl.fromTo('.dock', { yPercent: 140, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.9, clearProps: 'transform' }, 1.1);
     if ($('[data-intro="in"]')) tl.fromTo('[data-intro="in"]', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.06 }, 0.8);
   }
 
@@ -125,15 +128,56 @@
       const tick = () => { t.textContent = fmt.format(new Date()); };
       tick(); setInterval(tick, 15000);
     }
-    const btn = $('.menu-btn'), nav = $('.nav'), head = $('.head');
-    if (btn) {
+    const btn = $('.dock__menu'), nav = $('.nav'), head = $('.head');
+    const buzz = (ms = 8) => { try { if (!reduce && navigator.vibrate && matchMedia('(max-width:900px)').matches && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) navigator.vibrate(ms); } catch (e) {} };
+    if (btn && nav) {
       const set = (open) => {
         nav.classList.toggle('is-open', open); head.classList.toggle('is-menu', open);
         btn.setAttribute('aria-expanded', open); btn.firstElementChild.textContent = open ? 'Close' : 'Menu';
         document.body.style.overflow = open ? 'hidden' : '';
       };
-      btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
+      btn.addEventListener('click', () => { buzz(10); set(btn.getAttribute('aria-expanded') !== 'true'); });
       addEventListener('keydown', (e) => { if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') { set(false); btn.focus(); } });
+    }
+
+    /* phone dock: a live label that follows where you are (business or culture), and a rail for the six posters */
+    const dock = $('.dock');
+    if (dock) {
+      const side = $('.dock__side', dock), txt = $('.dock__txt', dock), def = dock.dataset.dockDefault || 'Bhoza';
+      const st = { sec: null, sides: 'Business', rail: 'Business' };
+      let shown = txt.textContent;
+      const render = () => {
+        const v = st.sec === 'sides' ? st.sides : st.sec === 'rail' ? st.rail : st.sec || def;
+        if (v === shown) return;
+        shown = v; txt.textContent = v;
+        side.dataset.side = v === 'Business' || v === 'Culture' ? v : '';
+        if (hasGsap && !reduce) gsap.fromTo(txt, { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.45, ease: 'expo.out', overwrite: true });
+      };
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { st.sec = e.target.dataset.dock; render(); } }), { rootMargin: '-50% 0px -50% 0px' });
+        $$('[data-dock]').forEach((el) => io.observe(el));
+      }
+      document.addEventListener('bhoza:side', (e) => { st.sides = e.detail; if (st.sec === 'sides') { buzz(14); render(); } });
+      const r = $('.stack'), segs = $$('[data-rail-ui] a'), hint = $('.rail__hint');
+      if (r && 'IntersectionObserver' in window) {
+        const cards = $$('.poster', r); let cur = -1;
+        const set = (i, user) => {
+          if (i === cur || i < 0) return; cur = i;
+          segs.forEach((a, j) => { a.classList.toggle('is-on', j === i); j === i ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'); });
+          st.rail = cards[i].dataset.side; render();
+          const ls = $('[data-rail-side]'), ln = $('[data-rail-name]'); if (ls) ls.textContent = st.rail; if (ln) ln.textContent = $('.poster__tab span:nth-child(2)', cards[i]).textContent;
+          if (user) { buzz(8); if (hint) hint.classList.add('is-gone'); }
+        };
+        const rio = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) set(cards.indexOf(e.target), cur !== -1); }), { root: r, threshold: 0.6 });
+        cards.forEach((c) => rio.observe(c));
+        segs.forEach((a, i) => a.addEventListener('click', (e) => {
+          e.preventDefault(); buzz(6);
+          r.scrollTo({ left: cards[i].offsetLeft - parseFloat(getComputedStyle(r).paddingLeft), behavior: reduce ? 'auto' : 'smooth' });
+        }));
+      }
+      /* the soft keyboard eats the screen: step the dock aside while a field is open */
+      document.addEventListener('focusin', (e) => { if (e.target.matches('input,textarea,select')) dock.classList.add('is-off'); });
+      document.addEventListener('focusout', () => dock.classList.remove('is-off'));
     }
     // booking form: writes the email, never pretends to send it
     const form = $('#book-form');

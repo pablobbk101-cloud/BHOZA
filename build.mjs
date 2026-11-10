@@ -55,7 +55,7 @@ const ticker = () => { const items = ['Marketing', 'Events', 'Artist management'
   return `<div class="mq" aria-label="Services"><div class="mq__band"><div class="mq__track">${run(false)}${run(true)}</div></div></div>`; };
 
 const footer = () => `
-<footer class="foot wrap t-hot">
+<footer class="foot wrap t-hot" data-dock="Book">
   <p class="foot__call" aria-hidden="true">Let's <span class="em">connect.</span></p>
   <div class="grid foot__row">
     <div class="foot__mail">
@@ -78,6 +78,7 @@ const footer = () => `
   </div>
 </footer>`;
 
+const DOCK = { 'index.html': 'Bhoza', 'work.html': 'What I do', 'about.html': 'About', 'book.html': 'Book', '404.html': 'Lost' };
 const layout = ({ file, title, desc, body }) => `<!DOCTYPE html>
 <html lang="en-ZA">
 <head>
@@ -103,11 +104,15 @@ const layout = ({ file, title, desc, body }) => `<!DOCTYPE html>
 <a class="skip" href="#main">Skip to content</a>
 <header class="head">
   <a class="mark" href="index.html" aria-label="Bhoza, home"><i aria-hidden="true"></i>Bhoza</a>
-  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav"><span>Menu</span><i aria-hidden="true"></i></button>
   <nav class="nav" id="nav" aria-label="Main">
     ${nav.map(([u, t], i) => `<a href="${u}"${u === file ? ' aria-current="page"' : ''}${i === 2 ? ' class="btn"' : ''}>${t}</a>`).join('\n    ')}
   </nav>
 </header>
+<aside class="dock" aria-label="Quick controls" data-dock-default="${DOCK[file] || 'Bhoza'}">
+  <button class="dock__menu" type="button" aria-expanded="false" aria-controls="nav"><span>Menu</span><i aria-hidden="true"></i></button>
+  <p class="dock__side" aria-hidden="true" data-side=""><span class="dock__dot"></span><span class="dock__txt">${DOCK[file] || 'Bhoza'}</span></p>
+  ${file === 'book.html' ? `<a class="dock__book" href="work.html">What I do ${arr}</a>` : `<a class="dock__book" href="book.html">Book ${arr}</a>`}
+</aside>
 <main id="main">
 ${body}
 </main>
@@ -123,7 +128,7 @@ ${footer()}
 
 /* ---------- pages ---------- */
 const home = `
-<section class="hero t-dark">
+<section class="hero t-dark" data-dock="Bhoza">
   <figure class="hero__fig" data-intro="fade">${pic('bhoza-portrait-1006', 1006, 1648, ALT.suit, { eager: true, sizes: '(max-width:900px) 100vw, 42vw', srcset: SUIT })}</figure>
   <div class="hero__copy">
     <p class="hero__kicker mono" data-intro="in"><span>Creative industry. Business. Culture.</span><span>Johannesburg</span></p>
@@ -137,7 +142,7 @@ const home = `
   <p class="hero__meta mono" data-intro="in">Marketing / Events / Artist management<br>Social / MC, DJ, speaker / Consulting</p>
 </section>
 
-<section class="sec wrap t-bone" style="padding-bottom:0">
+<section class="sec wrap t-bone" style="padding-bottom:0" data-dock="Bhoza">
   <div class="grid">
     <h2 class="state__big" data-reveal="lines">In kasi slang, a bhoza is the one in charge. Bhoza Mphela is that in two rooms: <span class="em">the boardroom</span> and <span class="em">the dance floor.</span></h2>
     <p class="state__label mono" data-reveal>Managing artists since 2003</p>
@@ -146,7 +151,7 @@ const home = `
 </section>
 <div class="t-bone">${ticker()}</div>
 
-<section class="sides t-dark" data-sides aria-label="Bhoza means business and culture">
+<section class="sides t-dark" data-sides data-dock="sides" aria-label="Bhoza means business and culture">
   <div class="sides__stage">
     <figure class="sides__frame"><div class="sides__pics">
       ${pic('bhoza-face-690', 690, 860, ALT.face, { sizes: '(max-width:900px) 100vw, 46vw', cls: 'sides__img--a' })}
@@ -159,12 +164,13 @@ const home = `
 </section>
 
 <section class="t-bone" aria-labelledby="do-h">
-  <div class="wrap grid do__head">
+  <div class="wrap grid do__head" data-dock="What I do">
     <h2 class="display d2" id="do-h" data-reveal="lines">Six ways to <span class="em">put me to work</span></h2>
     <p class="lede" data-reveal>Three for the business. Three for the culture. Book one or the whole stack.</p>
   </div>
-  <div class="stack">
-    ${services.map((s, i) => `<article class="poster ${s.theme}" style="--i:${i}">
+  <p class="rail__hint mono" aria-hidden="true"><span>Swipe the posters</span>${arr}</p>
+  <div class="stack" data-dock="rail">
+    ${services.map((s, i) => `<article class="poster ${s.theme}" id="svc-${s.k}" data-side="${s.side}" style="--i:${i}">
       <div class="poster__tab grid mono"><span>${s.side}</span><span>${s.short}</span><span>${i + 1} / ${services.length}</span></div>
       <div class="poster__body">
         <h3 class="poster__title">${s.title}</h3>
@@ -176,9 +182,13 @@ const home = `
       </div>
     </article>`).join('\n    ')}
   </div>
+  <nav class="rail__ui" aria-label="Pick a service" data-rail-ui>
+    <div class="rail__bar">${services.map((s, i) => `<a href="#svc-${s.k}" data-side="${s.side}" aria-label="${s.short}, ${i + 1} of ${services.length}"><i></i></a>`).join('')}</div>
+    <p class="rail__lab mono" aria-hidden="true"><span data-rail-side>${services[0].side}</span><span data-rail-name>${services[0].short}</span></p>
+  </nav>
 </section>
 
-<section class="sec wrap t-dark bill" aria-labelledby="bill-h">
+<section class="sec wrap t-dark bill" data-dock="Line-up" aria-labelledby="bill-h">
   <div class="bill__head">
     <h2 class="mono" id="bill-h">The line-up so far</h2>
     <p class="mono muted">Artists, brands and stations, 2003 to now</p>
@@ -192,7 +202,7 @@ const home = `
   <p class="bill__foot mono"><span>Plus actors and actresses</span><span>More names on request</span></p>
 </section>
 
-<section class="sec wrap t-bone">
+<section class="sec wrap t-bone" data-dock="Story">
   <div class="grid">
     ${fig('story__fig', pic('bhoza-street-911', 911, 1726, ALT.street, { sizes: '(max-width:900px) 100vw, 48vw', srcset: STREET, par: true }))}
     <div class="story__copy">
