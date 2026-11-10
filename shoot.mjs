@@ -14,11 +14,11 @@ for (const [m, opt] of modes) {
   for (const p of pages) {
     const page = await ctx.newPage(); const errs = [];
     page.on('console', (x) => x.type() === 'error' && errs.push(x.text())); page.on('pageerror', (e) => errs.push(String(e))); page.on('requestfailed', (q) => errs.push('FAILED ' + q.url()));
-    await page.goto(`http://127.0.0.1:4400/${p}.html`, { waitUntil: 'load' }); await page.waitForTimeout(1900);
+    await page.goto(`http://127.0.0.1:4400/${p}.html`, { waitUntil: 'load' }); await page.waitForTimeout(2600);
     if (m === 'd') await page.mouse.move(980, 190); await page.waitForTimeout(500);
     await page.screenshot({ path: `.shots/${m}-${p}-0.png` });
     const H = await page.evaluate(() => document.documentElement.scrollHeight); const vh = opt.viewport.height; let i = 1;
-    for (let y = vh * 0.9; y < H - 10 && i < (m==='m'?34:16); y += vh * 0.9, i++) { if (m === 'd') await page.mouse.wheel(0, vh * 0.9); else await page.evaluate((y) => window.scrollTo(0, y), y); await page.waitForTimeout(m === 'r' ? 250 : 1100); await page.screenshot({ path: `.shots/${m}-${p}-${i}.png` }); }
+    for (let y = vh * 0.8; y < H - 10 && i < 30; y += vh * 0.8, i++) { if (m === 'd') await page.mouse.wheel(0, vh * 0.8); else await page.evaluate((y) => window.scrollTo(0, y), y); await page.waitForTimeout(m === 'r' ? 250 : 1100); await page.screenshot({ path: `.shots/${m}-${p}-${i}.png` }); }
     const info = await page.evaluate(() => { const de = document.documentElement;
       const hidden = [...document.querySelectorAll('[data-reveal],[data-intro]')].filter((e) => +getComputedStyle(e).opacity < 0.9).length;
       const small = [...document.querySelectorAll('a,button,input,textarea')].filter((e) => { const r = e.getBoundingClientRect(); return r.width && (r.height < 24 || r.width < 24); }).map((e) => (e.textContent || e.name).trim().slice(0, 30));

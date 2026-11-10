@@ -1,127 +1,97 @@
-/* Bhoza.co.za concept. One clock (gsap.ticker), one driver (the light). */
+/* Bhoza.co.za concept v2. One clock (gsap.ticker). Scroll drives the concept; nothing follows the pointer. */
 (() => {
+  window.__ok = true;
   const html = document.documentElement;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const hasGsap = typeof gsap !== 'undefined';
+  const hasGsap = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && typeof SplitText !== 'undefined' && typeof Lenis !== 'undefined';
   const curtain = $('.curtain');
 
-  if (!hasGsap || reduce) {            // static, fully lit version
+  /* fit a line of type to the width of its box (poster lines, the masthead) */
+  function fit() {
+    $$('.fit').forEach((el) => {
+      if (el.dataset.fitMin && innerWidth < +el.dataset.fitMin) { el.style.fontSize = ''; return; }
+      const inn = el.firstElementChild; if (!inn) return;
+      el.style.fontSize = '100px';
+      const w = inn.getBoundingClientRect().width; if (!w) { el.style.fontSize = ''; return; }
+      const max = el.dataset.fitMax ? innerHeight * parseFloat(el.dataset.fitMax) : 1e5;
+      el.style.fontSize = Math.min((100 * el.clientWidth) / w, max).toFixed(2) + 'px';
+    });
+  }
+  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(fit, 150); });
+
+  if (!hasGsap || reduce) {            // static version: all content visible, no motion
     html.classList.remove('js');
     initUi();
+    (document.fonts ? document.fonts.ready : Promise.resolve()).then(fit);
     $('.head').classList.add('is-solid');
-    const bar = $('.cuebar');
-    if (bar && 'IntersectionObserver' in window) {   // cue bar still tells you where you are
-      const cio = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) {
-        $('.cuebar__q', bar).textContent = e.target.dataset.cue; $('.cuebar__name', bar).textContent = e.target.dataset.cueName; } }), { rootMargin: '-50% 0px -49% 0px' });
-      $$('[data-cue]').forEach((el) => cio.observe(el));
-    }
     return;
   }
   gsap.registerPlugin(ScrollTrigger, SplitText);
+  ScrollTrigger.config({ ignoreMobileResize: true });
   const EASE = 'expo.out';
-  const SPOT = false;   // follow-spot that tracks the pointer. Off for now; set true to bring it back.
-  if (!SPOT) html.classList.add('no-spot');
 
-  /* smooth scroll on the shared ticker */
   const lenis = new Lenis({ autoRaf: false, lerp: 0.12, anchors: true });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((t) => lenis.raf(t * 1000));
   gsap.ticker.lagSmoothing(0);
 
-  /* ---------- the light ---------- */
-  const light = { x: innerWidth * 0.62, y: innerHeight * 0.3, tx: 0, ty: 0, on: 0, beam: 1 };
-  light.tx = light.x; light.ty = light.y;
-  let lastMove = -1e9, pointerIn = false;
-  const lit = new Set();
-  const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting ? lit.add(e.target) : lit.delete(e.target)), { rootMargin: '10% 0px' });
-  $$('[data-lit]').forEach((el) => io.observe(el));
-  const homes = $$('[data-light-home]');
-
-  addEventListener('pointermove', (e) => {
-    if (e.pointerType !== 'mouse') return;
-    light.tx = e.clientX; light.ty = e.clientY; lastMove = performance.now(); pointerIn = true;
-  }, { passive: true });
-  document.addEventListener('pointerleave', () => { pointerIn = false; });
-
-  function homePoint() {
-    for (const el of homes) {
-      const r = el.getBoundingClientRect();
-      if (r.bottom > innerHeight * 0.15 && r.top < innerHeight * 0.85) {
-        const [fx, fy] = (el.dataset.lightHome || '0.5,0.3').split(',').map(Number);
-        return { x: r.left + r.width * fx, y: r.top + r.height * fy, rx: r.width * 0.16, ry: r.height * 0.07 };
-      }
-    }
-    return { x: innerWidth * 0.5, y: innerHeight * 0.42, rx: innerWidth * 0.3, ry: innerHeight * 0.18 };
+  /* signature: scroll cuts the suit to the street, business to culture */
+  function hero() {
+    const el = $('[data-sides]'); if (!el) return;
+    gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: el, start: 'top top', end: 'bottom bottom', scrub: true, invalidateOnRefresh: true } })
+      .to('.sides__img--a', { scale: 1.08, duration: 0.8 }, 0)
+      .fromTo('.sides__img--b', { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.55 }, 0.2)
+      .to('.swap__a', { yPercent: -115, duration: 0.16, ease: 'power2.in' }, 0.36)
+      .fromTo('.swap__b', { yPercent: 115 }, { yPercent: 0, duration: 0.22, ease: 'power2.out' }, 0.5)
+      .to({}, { duration: 0.2 });
   }
 
-  SPOT && gsap.ticker.add((time) => {
-    if (document.hidden) return;
-    const idle = !pointerIn || performance.now() - lastMove > 2400;
-    if (idle) {                           // idle state: a slow figure around the home mark
-      const h = homePoint();
-      light.tx = h.x + Math.sin(time * 0.42) * h.rx;
-      light.ty = h.y + Math.sin(time * 0.67 + 1.2) * h.ry;
-    }
-    const k = idle ? 0.035 : 0.14;
-    light.x += (light.tx - light.x) * k;
-    light.y += (light.ty - light.y) * k;
-    const s = html.style;
-    s.setProperty('--lx', light.x.toFixed(1) + 'px');
-    s.setProperty('--ly', light.y.toFixed(1) + 'px');
-    s.setProperty('--on', light.on.toFixed(3));
-    lit.forEach((el) => {
-      const r = el.getBoundingClientRect();
-      el.style.setProperty('--mx', (light.x - r.left).toFixed(1) + 'px');
-      el.style.setProperty('--my', (light.y - r.top).toFixed(1) + 'px');
-    });
-  });
-
-  /* ---------- lights up ---------- */
-  function lightsUp() {
-    const h = homePoint();
-    light.x = light.tx = h.x; light.y = light.ty = h.y;
+  /* first frame: the gold sheet lifts, the photo cuts in, the name rises */
+  function enter() {
     const tl = gsap.timeline({ defaults: { ease: EASE } });
-    tl.set(curtain, { opacity: 0 })
-      .to(light, { on: 1, duration: 0.07, ease: 'none' }, 0.12)      // snap on
-      .to(light, { on: 0.35, duration: 0.05, ease: 'none' })          // filament dip
-      .to(light, { on: 1, duration: 0.5 })
-      .fromTo('.no-spot .lit img', { opacity: 0 }, { opacity: 1, duration: 1.2, ease: 'power2.out' }, 0.1)
-      .fromTo('[data-intro="clip"]', { clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(-10% 0 -10% 0)', duration: 1.1, stagger: 0.08 }, 0.18)
-      .fromTo('[data-intro="in"]', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.06 }, 0.35);
-    return tl;
+    tl.fromTo(curtain, { clipPath: 'inset(0% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.75, ease: 'expo.inOut' }, 0.1);
+    if ($('[data-intro="fade"]')) tl.fromTo('[data-intro="fade"]', { opacity: 0 }, { opacity: 1, duration: 1.3, ease: 'power2.out' }, 0.35);
+    if ($('[data-intro="wipe"]')) tl.fromTo('[data-intro="wipe"]', { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(-10% 0% -10% 0%)', duration: 1.1 }, 0.45);
+    $$('[data-intro="lines"]').forEach((el) => {
+      const s = SplitText.create(el, { type: 'lines', mask: 'lines', aria: 'none' });
+      tl.from(s.lines, { yPercent: 108, duration: 1, stagger: 0.07 }, 0.5);
+    });
+    if ($('[data-intro="clip"]')) tl.fromTo('[data-intro="clip"]', { yPercent: 108 }, { yPercent: 0, duration: 1.05, stagger: 0.09 }, 0.55);
+    if ($('[data-intro="in"]')) tl.fromTo('[data-intro="in"]', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.06 }, 0.8);
   }
 
-  /* ---------- reveals ---------- */
   function reveals() {
     $$('[data-reveal="lines"]').forEach((el) => {
-      const split = SplitText.create(el, { type: 'lines', mask: 'lines', linesClass: 'ln', autoSplit: true, aria: 'none',
-        onSplit: (self) => gsap.from(self.lines, { yPercent: 105, duration: 0.95, ease: EASE, stagger: 0.06,
-          scrollTrigger: { trigger: el, start: 'top 88%', once: true } }) });
-      el.classList.add('is-in'); void split;
+      SplitText.create(el, { type: 'lines', mask: 'lines', autoSplit: true, aria: 'none',
+        onSplit: (self) => gsap.from(self.lines, { yPercent: 108, duration: 0.95, ease: EASE, stagger: 0.06, scrollTrigger: { trigger: el, start: 'top 88%', once: true } }) });
+      el.classList.add('is-in');
     });
-    ScrollTrigger.batch('[data-reveal=""],[data-reveal="in"]', {
-      start: 'top 90%', once: true,
-      onEnter: (els) => gsap.fromTo(els, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7, ease: EASE, stagger: 0.05, onComplete: () => els.forEach((e) => e.classList.add('is-in')) }),
+    ScrollTrigger.batch('[data-reveal=""]', { start: 'top 90%', once: true,
+      onEnter: (els) => gsap.fromTo(els, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7, ease: EASE, stagger: 0.05 }) });
+    ScrollTrigger.batch('[data-reveal="img"]', { start: 'top 85%', once: true,
+      onEnter: (els) => gsap.fromTo(els, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: EASE, stagger: 0.12 }) });
+    $$('[data-par]').forEach((img) => {
+      gsap.set(img, { scale: 1.16 });
+      gsap.fromTo(img, { yPercent: -6 }, { yPercent: 6, ease: 'none', scrollTrigger: { trigger: img.closest('figure'), start: 'top bottom', end: 'bottom top', scrub: true } });
     });
   }
 
-  /* ---------- cue bar ---------- */
-  function cues() {
-    const bar = $('.cuebar'); if (!bar) return;
-    const q = $('.cuebar__q', bar), name = $('.cuebar__name', bar), state = $('.cuebar__state', bar);
-    let goT;
-    const set = (el) => {
-      q.textContent = el.dataset.cue; name.textContent = el.dataset.cueName;
-      bar.classList.add('is-go'); state.textContent = 'Go';
-      clearTimeout(goT); goT = setTimeout(() => { bar.classList.remove('is-go'); state.textContent = 'Standby'; }, 900);
-    };
-    $$('[data-cue]').forEach((el) => ScrollTrigger.create({ trigger: el, start: 'top 55%', end: 'bottom 55%', onToggle: (s) => s.isActive && set(el) }));
-    ScrollTrigger.create({ start: 0, end: 'max', onUpdate: (s) => bar.style.setProperty('--p', s.progress.toFixed(4)) });
+  /* idle state: the ticker band keeps rolling, and leans into the scroll */
+  function ticker() {
+    $$('.mq__track').forEach((t) => {
+      let x = 0, on = false;
+      new IntersectionObserver(([e]) => { on = e.isIntersecting; }).observe(t.parentElement);
+      gsap.ticker.add((time, dt) => {
+        if (!on || document.hidden) return;
+        x -= (dt / 1000) * (2.6 + Math.min(Math.abs(lenis.velocity || 0), 60) * 0.3);
+        if (x <= -50) x += 50;
+        gsap.set(t, { xPercent: x });
+      });
+    });
   }
 
-  /* ---------- header: steps aside going down, returns going up ---------- */
   function header() {
     const head = $('.head');
     ScrollTrigger.create({ start: 0, end: 'max', onUpdate: (s) => {
@@ -130,7 +100,6 @@
     } });
   }
 
-  /* ---------- blackout between pages ---------- */
   function transitions() {
     document.addEventListener('click', (e) => {
       const a = e.target.closest('a[href]'); if (!a) return;
@@ -138,43 +107,29 @@
       if (e.metaKey || e.ctrlKey || e.shiftKey || a.target || !/^[\w-]+\.html(#[\w-]*)?$/.test(href)) return;
       if (href.split('#')[0] === (location.pathname.split('/').pop() || 'index.html')) return;
       e.preventDefault();
-      gsap.to(light, { on: 0, duration: 0.18, ease: 'power2.in' });
-      gsap.to(curtain, { opacity: 1, duration: 0.26, ease: 'power2.in', onComplete: () => { location.href = href; } });
+      gsap.fromTo(curtain, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.5, ease: 'expo.inOut', onComplete: () => { location.href = href; } });
     });
-    addEventListener('pageshow', (e) => { if (e.persisted) { gsap.set(curtain, { opacity: 0 }); light.on = 1; } });
+    addEventListener('pageshow', (e) => { if (e.persisted) gsap.set(curtain, { clipPath: 'inset(0% 0% 100% 0%)' }); });
   }
 
   document.fonts.ready.then(() => {
-    initUi(); reveals(); cues(); header(); transitions(); lightsUp();
+    fit(); initUi(); hero(); reveals(); ticker(); header(); transitions(); enter();
     ScrollTrigger.refresh();
   });
-  setTimeout(() => { if (getComputedStyle(curtain).opacity === '1') gsap.to(curtain, { opacity: 0, duration: 0.3 }); }, 2600);
 
   /* ---------- plain UI (runs with or without motion) ---------- */
   function initUi() {
-    // clock: her local time
-    const t = $('.cuebar__clock');
+    const t = $('.clock');
     if (t) {
-      const fmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Africa/Johannesburg', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-      let last = -1;
-      const tick = () => { const s = Math.floor(Date.now() / 1000); if (s !== last) { last = s; t.textContent = fmt.format(new Date()); } };
-      tick(); hasGsap && !reduce ? gsap.ticker.add(tick) : setInterval(tick, 1000);
+      const fmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Africa/Johannesburg', hour: '2-digit', minute: '2-digit', hour12: false });
+      const tick = () => { t.textContent = fmt.format(new Date()); };
+      tick(); setInterval(tick, 15000);
     }
-    // buttons: remember where the pointer came in
-    $$('.btn').forEach((b) => b.addEventListener('pointerenter', (e) => {
-      const r = b.getBoundingClientRect();
-      b.style.setProperty('--bx', e.clientX - r.left + 'px'); b.style.setProperty('--by', e.clientY - r.top + 'px');
-    }));
-    // cue rows: the lamp follows along the row
-    !html.classList.contains('no-spot') && $$('.cue').forEach((c) => c.addEventListener('pointermove', (e) => {
-      c.style.setProperty('--rx', e.clientX - c.getBoundingClientRect().left + 'px');
-    }, { passive: true }));
-    // phone menu
     const btn = $('.menu-btn'), nav = $('.nav'), head = $('.head');
     if (btn) {
       const set = (open) => {
         nav.classList.toggle('is-open', open); head.classList.toggle('is-menu', open);
-        btn.setAttribute('aria-expanded', open); btn.firstChild.textContent = open ? 'Close' : 'Menu';
+        btn.setAttribute('aria-expanded', open); btn.firstElementChild.textContent = open ? 'Close' : 'Menu';
         document.body.style.overflow = open ? 'hidden' : '';
       };
       btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
@@ -185,18 +140,18 @@
     if (form) {
       const out = $('#book-out'), pre = $('pre', out), mail = $('#book-mail'), copy = $('#book-copy'), note = $('#book-note');
       const pick = (location.hash || '').slice(1);
-      if (pick) { const c = form.querySelector(`input[value][data-k="${pick}"]`); if (c) c.checked = true; }
+      if (pick) { const c = form.querySelector(`input[data-k="${pick.replace(/[^\w-]/g, '')}"]`); if (c) c.checked = true; }
       form.addEventListener('submit', (e) => {
         e.preventDefault();
-        const d = new FormData(form), cues = d.getAll('cue');
-        const subject = `Booking enquiry: ${cues.length ? cues.join(', ') : 'general'}`;
-        const body = [`Hi Bhoza,`, ``, `${d.get('msg') || '(Tell Bhoza about the project here.)'}`, ``,
-          `What I need: ${cues.length ? cues.join(', ') : 'not sure yet'}`, `When: ${d.get('when') || 'to be confirmed'}`, ``,
+        const d = new FormData(form), picks = d.getAll('need');
+        const subject = `Booking enquiry: ${picks.length ? picks.join(', ') : 'general'}`;
+        const body = ['Hi Bhoza,', '', `${d.get('msg') || '(Tell Bhoza about the project here.)'}`, '',
+          `What I need: ${picks.length ? picks.join(', ') : 'not sure yet'}`, `When: ${d.get('when') || 'to be confirmed'}`, '',
           `${d.get('name') || ''}`, `${d.get('email') || ''}`].join('\n');
         pre.textContent = `To: missbhoza@bhoza.co.za\nSubject: ${subject}\n\n${body}`;
         mail.href = `mailto:missbhoza@bhoza.co.za?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         out.classList.add('is-on'); note.textContent = 'Your email is written. Open it in your mail app, or copy it.';
-        out.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+        out.scrollIntoView({ block: 'nearest' });
       });
       copy.addEventListener('click', async () => {
         try { await navigator.clipboard.writeText(pre.textContent); note.textContent = 'Copied. Paste it into an email to missbhoza@bhoza.co.za.'; }

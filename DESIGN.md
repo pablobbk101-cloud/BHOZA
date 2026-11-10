@@ -37,3 +37,14 @@ Book: split form + direct lines.
 
 ## Change log
 - Pointer-tracking follow-spot switched off at the client's request (`SPOT = false` in src/site.js). Portraits and headlines are evenly lit; the code path is kept so it can return later.
+
+## v2 (client feedback: sections looked generic; keep the hero)
+Idea:        Her own tagline, taken literally: Bhoza means business, and Bhoza means culture.
+Metaphor:    A gig poster. Flat colour blocks, condensed caps against a fashion italic, a line-up set like a festival bill.
+Signature:   The pinned "two sides" section: scroll cuts the suit to the street and "business." to "culture."
+Motion verb: Cut. Straight-edged wipes from the bottom edge (curtain, images, buttons). Nothing follows the pointer.
+Idle:        The ticker band keeps rolling.
+Palette:     black #0b0a09, charcoal #1c1a17, bone #ece6d9, hot red #ff4a2b (the hero's lamp colour, now the block colour).
+Type:        Bricolage Grotesque condensed 800 (poster caps), Bodoni Moda italic (the second voice), DM Mono (labels).
+Kept:        v1 hero, unchanged in layout, at the client's request. Dropped: cue bar, running-order list, feet crop.
+Sections:    hero / statement + ticker / two sides (pinned) / six stacked posters tagged Business or Culture / line-up bill / story with street photo / red footer.
