@@ -144,12 +144,13 @@
     const dock = $('.dock');
     if (dock) {
       const side = $('.dock__side', dock), txt = $('.dock__txt', dock), def = dock.dataset.dockDefault || 'Bhoza';
-      const st = { sec: null, sides: 'Business', rail: 'Business' };
+      const bzTpl = $('.dock__bz', dock), st = { sec: null, sides: 'Business', rail: 'Business' };
       let shown = txt.textContent;
       const render = () => {
         const v = st.sec === 'sides' ? st.sides : st.sec === 'rail' ? st.rail : st.sec || def;
         if (v === shown) return;
-        shown = v; txt.textContent = v;
+        shown = v;
+        if (v === 'Bhoza' && bzTpl) txt.innerHTML = bzTpl.innerHTML; else txt.textContent = v;
         side.dataset.side = v === 'Business' || v === 'Culture' ? v : '';
         if (hasGsap && !reduce) gsap.fromTo(txt, { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.45, ease: 'expo.out', overwrite: true });
       };

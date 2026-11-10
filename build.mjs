@@ -1,5 +1,6 @@
 // Static build: node build.mjs  ->  dist/
 import fs from 'fs';
+import { SPRITE, NAME, NAME_DOT } from './src/logo/name.mjs';
 const SITE = 'https://www.bhoza.co.za/';
 const EMAIL = 'missbhoza@bhoza.co.za';
 
@@ -43,6 +44,9 @@ const ALT = {
 /* ---------- partials ---------- */
 const arr = '<span class="arr" aria-hidden="true">&rarr;</span>';
 const sq = '<i class="sq" aria-hidden="true"></i>';
+/* the name, wherever it is mentioned: serif italic Bhoza with the o cut like the wordmark */
+const brand = (html) => html.split(/(<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<pre[\s\S]*?<\/pre>|<textarea[\s\S]*?<\/textarea>|<svg[\s\S]*?<\/svg>|<template[\s\S]*?<\/template>|<span class="vh">[^<]*<\/span>|<[^>]+>)/)
+  .map((part, i) => (i % 2 ? part : part.replace(/\bBhoza\b/g, `<span class="bzn"><span class="vh">Bhoza</span>${NAME}</span>`))).join('');
 const LOGO = (f) => fs.readFileSync(`src/logo/${f}`, 'utf8');
 const nav = [['work.html', 'What I do'], ['about.html', 'About'], ['book.html', 'Book Bhoza']];
 const pic = (base, w, h, alt, { eager = false, sizes = '100vw', srcset, cls = '', par = false } = {}) =>
@@ -103,15 +107,17 @@ const layout = ({ file, title, desc, body }) => `<!DOCTYPE html>
     sameAs: socials.filter((s) => s.u).map((s) => s.u) })}</script>
 </head>
 <body class="t-dark">
+${SPRITE}
 <a class="skip" href="#main">Skip to content</a>
 <header class="head">
-  <a class="mark" href="index.html" aria-label="Bhoza, home">${LOGO('header-a.svg').replace('aria-label="Bhoza"','aria-hidden="true"').replace(' role="img"','')}</a>
+  <a class="mark" href="index.html" aria-label="Bhoza, home">${LOGO('header-b.svg').replace('aria-label="Bhoza"','aria-hidden="true"').replace(' role="img"','')}</a>
   <nav class="nav" id="nav" aria-label="Main">
     ${nav.map(([u, t], i) => `<a href="${u}"${u === file ? ' aria-current="page"' : ''}${i === 2 ? ' class="btn"' : ''}>${t}</a>`).join('\n    ')}
   </nav>
 </header>
 <aside class="dock" aria-label="Quick controls" data-dock-default="${DOCK[file] || 'Bhoza'}">
   <button class="dock__menu" type="button" aria-expanded="false" aria-controls="nav"><span>Menu</span><i aria-hidden="true"></i></button>
+  <template class="dock__bz">${NAME}</template>
   <p class="dock__side" aria-hidden="true" data-side=""><span class="dock__dot"></span><span class="dock__txt">${DOCK[file] || 'Bhoza'}</span></p>
   ${file === 'book.html' ? `<a class="dock__book" href="work.html">What I do ${arr}</a>` : `<a class="dock__book" href="book.html">Book ${arr}</a>`}
 </aside>
@@ -119,7 +125,7 @@ const layout = ({ file, title, desc, body }) => `<!DOCTYPE html>
 ${body}
 </main>
 ${footer()}
-<div class="curtain" aria-hidden="true"><span>${LOGO('name-ca.svg')}</span></div>
+<div class="curtain" aria-hidden="true"><span>${NAME_DOT}</span></div>
 <script src="assets/js/gsap.min.js" defer></script>
 <script src="assets/js/ScrollTrigger.min.js" defer></script>
 <script src="assets/js/SplitText.min.js" defer></script>
@@ -140,7 +146,7 @@ const home = `
       <a class="btn" href="#do-h">See what I do</a>
     </div>
   </div>
-  <h1 class="hero__word" data-intro="wipe">Bhoza</h1>
+  <h1 class="hero__word" data-intro="wipe"><span class="vh">Bhoza</span>${LOGO('header-a.svg').replace(/viewBox="-6 -70 (\d+) 800"/, 'viewBox="-6 -40 $1 740"').replace(' role="img"', ' aria-hidden="true"').replace('bz--a', 'bz--hero')}</h1>
   <p class="hero__meta mono" data-intro="in">Marketing / Events / Artist management<br>Social / MC, DJ, speaker / Consulting</p>
 </section>
 
@@ -161,7 +167,7 @@ const home = `
     </div></figure>
     <p class="sides__tag mono">Two sides.<br>One Bhoza.</p>
     <div class="sides__side"><p>The suit writes the strategy and signs the deal. The cap runs the night.</p></div>
-    <div class="sides__title"><h2><span class="sides__pre"><span class="vh">Bhoza</span>${LOGO('name-ca.svg').replace(' role="img"',' aria-hidden="true"')} means</span><span class="swap"><span class="swap__a">business.</span><span class="swap__b">culture.</span></span></h2></div>
+    <div class="sides__title"><h2><span class="sides__pre"><span class="vh">Bhoza</span>${NAME} means</span><span class="swap"><span class="swap__a">business.</span><span class="swap__b">culture.</span></span></h2></div>
   </div>
 </section>
 
@@ -331,7 +337,7 @@ const pages = [
   { file: 'book.html', title: 'Book Bhoza | Bhoza Mphela', desc: 'Book Bhoza Mphela for marketing, events, artist management, social media, MC, DJ, speaking or consulting. Email missbhoza@bhoza.co.za.', body: book },
   { file: '404.html', title: 'Wrong door | Bhoza Mphela', desc: 'This page could not be found.', body: lost },
 ];
-for (const p of pages) fs.writeFileSync(`dist/${p.file}`, layout(p));
+for (const p of pages) { const page = layout(p), i = page.indexOf('<body'); fs.writeFileSync(`dist/${p.file}`, page.slice(0, i) + brand(page.slice(i))); }
 fs.copyFileSync('src/site.css', 'dist/assets/css/site.css');
 fs.copyFileSync('src/site.js', 'dist/assets/js/site.js');
 fs.copyFileSync('src/logo/favicon.svg', 'dist/assets/img/favicon.svg'); fs.copyFileSync('src/logo/apple-touch-icon.png', 'dist/assets/img/apple-touch-icon.png');
