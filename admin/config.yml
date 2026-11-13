@@ -1,0 +1,320 @@
+# Decap CMS configuration. Every collection below maps to a file in /content.
+# Login: GitHub. TODO: deploy an OAuth proxy for Decap on Cloudflare and set base_url (see README.md, "Content manager").
+backend:
+  name: github
+  repo: pablobbk101-cloud/bhoza   # TODO: change if the repository moves to the client's account
+  branch: main
+  # base_url: https://decap-oauth.YOUR-SUBDOMAIN.workers.dev   # TODO
+site_url: https://missbhoza.mrpoint.online
+display_url: https://missbhoza.mrpoint.online
+logo_url: /assets/icons/icon-192.png
+media_folder: images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: settings
+    label: Site settings
+    files:
+      - name: site
+        label: Name, contact details, social links and store
+        file: content/site.json
+        format: json
+        fields:
+          - { name: name, label: Name, widget: string }
+          - { name: tagline, label: Tagline, widget: string }
+          - { name: headline, label: Home headline, widget: string }
+          - { name: intro, label: Home intro line, widget: text }
+          - { name: location, label: Location, widget: string }
+          - { name: since, label: In the industry since, widget: string }
+          - { name: siteUrl, label: Website address, widget: string }
+          - { name: email, label: Public email, widget: string }
+          - { name: phone, label: Public phone (leave empty to hide), widget: string, required: false }
+          - { name: shopUrl, label: Bhoza Lifestyle store link, widget: string }
+          - { name: formEndpoint, label: Formspree URL (leave empty to use the built-in form handler), widget: string, required: false }
+          - { name: analytics, label: "Analytics ID (G-XXXX for Google Analytics, or a Cloudflare Web Analytics token)", widget: string, required: false }
+          - { name: heroImage, label: Home portrait, widget: image }
+          - { name: heroImageAlt, label: Home portrait description (for screen readers), widget: string }
+          - { name: ogImage, label: Social sharing image (1200x630), widget: image }
+          - { name: roles, label: "Roles shown in the home line", widget: list, field: { name: role, label: Role, widget: string } }
+          - name: socials
+            label: Social links
+            widget: list
+            fields:
+              - { name: name, label: Network, widget: string }
+              - { name: handle, label: Handle, widget: string, required: false }
+              - { name: url, label: Link (leave empty to hide), widget: string, required: false }
+          - name: enquiries
+            label: Enquiry categories
+            widget: list
+            fields:
+              - { name: key, label: Key (lowercase, used in links; do not change existing keys), widget: string }
+              - { name: label, label: Label, widget: string }
+              - { name: desc, label: Description, widget: text }
+          - name: credit
+            label: Footer credit
+            widget: object
+            fields:
+              - { name: text, label: Text, widget: string }
+              - { name: site, label: Site name, widget: string }
+              - { name: siteUrl, label: Site link, widget: string }
+              - { name: phone, label: Phone, widget: string }
+
+  - name: lists
+    label: Work and appearances
+    files:
+      - name: expertise
+        label: Areas of expertise (home page)
+        file: content/expertise.json
+        format: json
+        fields:
+          - name: items
+            label: Areas
+            widget: list
+            fields:
+              - { name: title, label: Title, widget: string }
+              - { name: line, label: One line, widget: string }
+              - { name: link, label: Link, widget: string }
+      - name: events
+        label: Events and experiences
+        file: content/events.json
+        format: json
+        fields:
+          - name: items
+            label: Events
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - { name: slug, label: "Web address (e.g. soul-connex)", widget: string }
+              - { name: title, label: Name, widget: string }
+              - { name: kind, label: Type, widget: string }
+              - { name: summary, label: Summary, widget: text }
+              - { name: image, label: Main photo, widget: image, required: false }
+              - { name: imageLabel, label: Photo description, widget: string }
+              - { name: featured, label: Featured on home page, widget: boolean, default: true }
+              - { name: placeholder, label: Copy still needs confirming, widget: boolean, default: false }
+              - name: facts
+                label: Facts
+                widget: list
+                fields: [{ name: label, label: Label, widget: string }, { name: value, label: Value, widget: string }]
+              - { name: body, label: Story, widget: markdown }
+              - name: gallery
+                label: Gallery
+                widget: list
+                fields:
+                  - { name: image, label: Photo, widget: image, required: false }
+                  - { name: label, label: Caption, widget: string }
+                  - { name: alt, label: Description for screen readers, widget: string, required: false }
+              - name: video
+                label: Video
+                widget: object
+                fields:
+                  - { name: youtube, label: YouTube video ID, widget: string, required: false }
+                  - { name: vimeo, label: Vimeo video ID, widget: string, required: false }
+                  - { name: title, label: Video title, widget: string }
+      - name: projects
+        label: Projects and ventures
+        file: content/projects.json
+        format: json
+        fields:
+          - name: items
+            label: Ventures
+            widget: list
+            summary: "{{fields.title}}"
+            fields:
+              - { name: title, label: Name, widget: string }
+              - { name: category, label: Category, widget: string }
+              - { name: role, label: "Bhoza's role", widget: string }
+              - { name: description, label: Description, widget: text }
+              - { name: logo, label: Logo, widget: image, required: false }
+              - { name: url, label: Website link, widget: string, required: false }
+              - { name: placeholder, label: Still needs confirming, widget: boolean, default: false }
+      - name: dj
+        label: DJ Bhoza and music
+        file: content/dj.json
+        format: json
+        fields:
+          - { name: sound, label: Sound, widget: text }
+          - { name: soundPlaceholder, label: Sound still needs confirming, widget: boolean, default: false }
+          - { name: profileImage, label: DJ photo, widget: image, required: false }
+          - { name: profileImageLabel, label: DJ photo description, widget: string }
+          - name: appearances
+            label: Selected appearances
+            widget: list
+            fields:
+              - { name: date, label: Year or date, widget: string }
+              - { name: event, label: Event, widget: string }
+              - { name: place, label: Place, widget: string }
+              - { name: placeholder, label: Still needs confirming, widget: boolean, default: false }
+          - name: gallery
+            label: DJ gallery
+            widget: list
+            fields:
+              - { name: image, label: Photo, widget: image, required: false }
+              - { name: label, label: Caption, widget: string }
+              - { name: alt, label: Description for screen readers, widget: string, required: false }
+          - name: video
+            label: Video
+            widget: object
+            fields:
+              - { name: youtube, label: YouTube video ID, widget: string, required: false }
+              - { name: vimeo, label: Vimeo video ID, widget: string, required: false }
+              - { name: title, label: Video title, widget: string }
+          - { name: roster, label: Artist roster, widget: list }
+          - name: experience
+            label: Music industry experience
+            widget: list
+            fields: [{ name: title, label: Name, widget: string }, { name: note, label: Role, widget: string }]
+          - name: partners
+            label: Partners and collaborators
+            widget: list
+            fields:
+              - { name: title, label: Name, widget: string }
+              - { name: note, label: Note, widget: string }
+              - { name: placeholder, label: Placeholder (hidden on the site), widget: boolean, default: false }
+      - name: speaking
+        label: Speaking and media
+        file: content/speaking.json
+        format: json
+        fields:
+          - name: topics
+            label: Topics
+            widget: list
+            fields: [{ name: title, label: Topic, widget: string }, { name: line, label: One line, widget: string }]
+          - { name: formats, label: Formats, widget: list }
+          - name: engagements
+            label: Engagements
+            widget: list
+            fields:
+              - { name: date, label: Year or date, widget: string }
+              - { name: title, label: Title, widget: string }
+              - { name: org, label: Organisation, widget: string }
+              - { name: kind, label: Type, widget: string }
+              - { name: placeholder, label: Still needs confirming, widget: boolean, default: false }
+          - name: media
+            label: Interviews and media features
+            widget: list
+            fields:
+              - { name: outlet, label: Outlet, widget: string }
+              - { name: title, label: Title, widget: string }
+              - { name: url, label: Link, widget: string, required: false }
+              - { name: kind, label: Type, widget: string }
+              - { name: placeholder, label: Still needs confirming, widget: boolean, default: false }
+          - name: videos
+            label: Videos
+            widget: list
+            fields:
+              - { name: youtube, label: YouTube video ID, widget: string, required: false }
+              - { name: vimeo, label: Vimeo video ID, widget: string, required: false }
+              - { name: title, label: Title, widget: string }
+              - { name: label, label: Placeholder description, widget: string }
+
+  - name: pages
+    label: Page text
+    files:
+      - name: about
+        label: About
+        file: content/pages/about.md
+        fields:
+          - { name: title, label: Browser title, widget: string }
+          - { name: description, label: Search description, widget: text }
+          - { name: heading, label: Heading, widget: string }
+          - { name: lead, label: Intro, widget: text }
+          - { name: image, label: Portrait, widget: image }
+          - { name: imageAlt, label: Portrait description, widget: string }
+          - { name: quote, label: Large line, widget: string }
+          - name: milestones
+            label: Milestones
+            widget: list
+            fields: [{ name: when, label: When, widget: string }, { name: what, label: What, widget: string }]
+          - { name: achievements, label: Achievements, widget: list }
+          - { name: body, label: "Biography (each '## Heading' starts a section)", widget: markdown }
+      - name: home
+        label: Home
+        file: content/pages/home.md
+        fields:
+          - { name: title, label: Browser title, widget: string }
+          - { name: description, label: Search description, widget: text }
+          - { name: statement, label: Introduction paragraph, widget: text }
+          - { name: credits, label: Credits line, widget: list }
+          - { name: lifestyleTitle, label: Lifestyle heading, widget: string }
+          - { name: lifestyleText, label: Lifestyle text, widget: text }
+          - { name: body, label: Body (unused), widget: hidden, required: false }
+      - name: marketing
+        label: Marketing and strategy
+        file: content/pages/marketing.md
+        fields:
+          - { name: title, label: Browser title, widget: string }
+          - { name: image, label: Main photo, widget: image, required: false }
+          - { name: imageAlt, label: Photo description, widget: string, required: false }
+          - { name: imageLabel, label: Placeholder description, widget: string, required: false }
+          - { name: description, label: Search description, widget: text }
+          - { name: heading, label: Heading, widget: string }
+          - { name: lead, label: Intro, widget: text }
+          - name: services
+            label: Services
+            widget: list
+            fields: [{ name: title, label: Service, widget: string }, { name: body, label: Description, widget: text }]
+          - name: process
+            label: Process steps
+            widget: list
+            fields: [{ name: title, label: Step, widget: string }, { name: body, label: Description, widget: text }]
+          - { name: casesIntro, label: Selected work intro, widget: text }
+          - name: cases
+            label: Case studies
+            widget: list
+            fields:
+              - { name: title, label: Title, widget: string }
+              - { name: client, label: Client, widget: string }
+              - { name: note, label: Type, widget: string }
+              - { name: placeholder, label: Placeholder, widget: boolean, default: false }
+          - { name: body, label: Body (unused), widget: hidden, required: false }
+      - name: music
+        label: Music and entertainment
+        file: content/pages/music.md
+        fields:
+          - { name: title, label: Browser title, widget: string }
+          - { name: description, label: Search description, widget: text }
+          - { name: heading, label: Heading, widget: string }
+          - { name: lead, label: Intro, widget: text }
+          - { name: djHeading, label: DJ heading, widget: string }
+          - { name: djText, label: DJ text, widget: text }
+          - { name: mcHeading, label: MC heading, widget: string }
+          - { name: mcText, label: MC text, widget: text }
+          - { name: mcList, label: MC occasions, widget: list }
+          - { name: managementHeading, label: Management heading, widget: string }
+          - { name: managementText, label: Management text, widget: text }
+          - { name: experienceHeading, label: Experience heading, widget: string }
+          - { name: partnersHeading, label: Partnerships heading, widget: string }
+          - { name: partnersText, label: Partnerships text, widget: text }
+          - { name: body, label: Body (unused), widget: hidden, required: false }
+      - name: events
+        label: Events and experiences
+        file: content/pages/events.md
+        fields:
+          - { name: title, label: Browser title, widget: string }
+          - { name: description, label: Search description, widget: text }
+          - { name: heading, label: Heading, widget: string }
+          - { name: lead, label: Intro, widget: text }
+          - name: capabilities
+            label: Capabilities
+            widget: list
+            fields: [{ name: title, label: Title, widget: string }, { name: body, label: Description, widget: text }]
+          - { name: body, label: Body (unused), widget: hidden, required: false }
+      - { name: speaking, label: Speaking and media, file: content/pages/speaking.md, fields: [{ name: title, label: Browser title, widget: string }, { name: image, label: Main photo, widget: image, required: false }, { name: imageAlt, label: Photo description, widget: string, required: false }, { name: imageLabel, label: Placeholder description, widget: string, required: false }, { name: description, label: Search description, widget: text }, { name: heading, label: Heading, widget: string }, { name: lead, label: Intro, widget: text }, { name: body, label: Body (unused), widget: hidden, required: false }] }
+      - { name: ventures, label: Projects and ventures, file: content/pages/ventures.md, fields: [{ name: title, label: Browser title, widget: string }, { name: description, label: Search description, widget: text }, { name: heading, label: Heading, widget: string }, { name: lead, label: Intro, widget: text }, { name: body, label: Body (unused), widget: hidden, required: false }] }
+      - name: lifestyle
+        label: The Bhoza Lifestyle
+        file: content/pages/lifestyle.md
+        fields:
+          - { name: title, label: Browser title, widget: string }
+          - { name: description, label: Search description, widget: text }
+          - { name: heading, label: Heading, widget: string }
+          - { name: lead, label: Intro, widget: string }
+          - { name: image, label: Main photo, widget: image }
+          - { name: imageAlt, label: Photo description, widget: string }
+          - name: looks
+            label: Lookbook images
+            widget: list
+            fields: [{ name: image, label: Photo, widget: image, required: false }, { name: label, label: Description, widget: string }]
+          - { name: body, label: Text, widget: markdown }
+      - { name: contact, label: Contact and bookings, file: content/pages/contact.md, fields: [{ name: title, label: Browser title, widget: string }, { name: description, label: Search description, widget: text }, { name: heading, label: Heading, widget: string }, { name: lead, label: Intro, widget: text }, { name: responseNote, label: Reply time note, widget: string }, { name: body, label: Body (unused), widget: hidden, required: false }] }

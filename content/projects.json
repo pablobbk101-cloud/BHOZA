@@ -1,0 +1,49 @@
+{
+  "items": [
+    {
+      "title": "Lawyers for the Arts South Africa",
+      "category": "Advocacy",
+      "role": "Role to confirm",
+      "description": "Access to legal knowledge and support for artists and creative businesses, so that talent is protected by sound contracts, clear rights and fair terms.",
+      "logo": "",
+      "url": "",
+      "placeholder": true
+    },
+    {
+      "title": "Rise Limpopo",
+      "category": "Regional development",
+      "role": "Role to confirm",
+      "description": "A platform for creative and entrepreneurial talent from Limpopo, opening doors to skills, networks and opportunities beyond the province.",
+      "logo": "",
+      "url": "",
+      "placeholder": true
+    },
+    {
+      "title": "Female DJ Network",
+      "category": "Industry network",
+      "role": "Partner",
+      "description": "A network for women DJs that builds visibility, skills and bookings in a scene that has not always made room for them.",
+      "logo": "",
+      "url": "",
+      "placeholder": true
+    },
+    {
+      "title": "Creative industry project",
+      "category": "Selected project",
+      "role": "Role to confirm",
+      "description": "Placeholder for a selected creative industry project: a programme, campaign or initiative Bhoza led or shaped.",
+      "logo": "",
+      "url": "",
+      "placeholder": true
+    },
+    {
+      "title": "Creative industry project",
+      "category": "Selected project",
+      "role": "Role to confirm",
+      "description": "Placeholder for a second selected project. Replace with the name, a short description and a link.",
+      "logo": "",
+      "url": "",
+      "placeholder": true
+    }
+  ]
+}

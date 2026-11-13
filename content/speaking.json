@@ -1,0 +1,25 @@
+{
+  "topics": [
+    { "title": "Marketing the creative economy", "line": "Why creative work needs strategy as much as talent, and how to build both." },
+    { "title": "Twenty years in the music business", "line": "What artist management teaches about careers, money and staying power." },
+    { "title": "Women behind and in front of the decks", "line": "Visibility, safety and opportunity for women in entertainment." },
+    { "title": "Building a personal brand with substance", "line": "Reputation, consistency and knowing what you stand for." },
+    { "title": "Curating experiences people return to", "line": "Event design, partnerships and the business model behind a great day out." }
+  ],
+  "formats": ["Keynotes", "Conference appearances", "Panel discussions", "Workshop facilitation", "MC and moderation", "Interviews and media"],
+  "engagements": [
+    { "date": "2026", "title": "Conference keynote", "org": "Organisation to confirm", "kind": "Keynote", "placeholder": true },
+    { "date": "2025", "title": "Panel on the business of music", "org": "Organisation to confirm", "kind": "Panel", "placeholder": true },
+    { "date": "2025", "title": "Workshop for emerging artists", "org": "Organisation to confirm", "kind": "Workshop", "placeholder": true },
+    { "date": "2024", "title": "Awards ceremony", "org": "Organisation to confirm", "kind": "MC", "placeholder": true }
+  ],
+  "media": [
+    { "outlet": "Publication or station", "title": "Interview or feature title", "url": "", "kind": "Interview", "placeholder": true },
+    { "outlet": "Publication or station", "title": "Interview or feature title", "url": "", "kind": "Radio", "placeholder": true },
+    { "outlet": "Music In Africa", "title": "Profile: Bhoza Mphela", "url": "", "kind": "Profile", "placeholder": true }
+  ],
+  "videos": [
+    { "youtube": "", "vimeo": "", "title": "Bhoza Mphela on stage", "label": "Keynote or panel clip" },
+    { "youtube": "", "vimeo": "", "title": "Bhoza Mphela in conversation", "label": "Interview clip" }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "items": [
+    { "title": "Marketing and strategy", "line": "Positioning, campaigns and communications for brands that need to be understood, not just seen.", "link": "/marketing/" },
+    { "title": "DJ", "line": "Soulful sets for rooms that came to feel something together.", "link": "/music/#dj" },
+    { "title": "MC and host", "line": "Holding the room and the run sheet at the same time.", "link": "/music/#mc" },
+    { "title": "Artist management", "line": "Building careers since 2003, from the first booking to the long game.", "link": "/music/#management" },
+    { "title": "Event curation", "line": "Experiences shaped from the first idea to the last guest home.", "link": "/events/" },
+    { "title": "Speaking and media", "line": "Keynotes, panels and workshops on the business of creativity.", "link": "/speaking/" },
+    { "title": "Ventures", "line": "Initiatives that give the creative economy structure, access and protection.", "link": "/ventures/" }
+  ]
+}
