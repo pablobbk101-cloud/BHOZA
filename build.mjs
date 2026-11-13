@@ -1,7 +1,7 @@
 // Static build: node build.mjs  ->  dist/
 import fs from 'fs';
 import { SPRITE, NAME, NAME_DOT } from './src/logo/name.mjs';
-const SITE = 'https://www.bhoza.co.za/';
+const SITE = process.env.SITE_URL || 'https://missbhoza.mrpoint.online/'; // switch to https://www.bhoza.co.za/ at launch
 const EMAIL = 'missbhoza@bhoza.co.za';
 
 /* ---------- content (one place to edit) ---------- */
@@ -95,7 +95,7 @@ const layout = ({ file, title, desc, body }) => `<!DOCTYPE html>
 <meta name="theme-color" content="#0b0a09">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Bhoza">
 <meta property="og:title" content="${title}"><meta property="og:description" content="${desc}">
-<meta property="og:url" content="${SITE}${file === 'index.html' ? '' : file}"><meta property="og:image" content="${SITE}assets/img/og.jpg">
+<meta property="og:url" content="${SITE}${file === 'index.html' ? '' : file}"><meta property="og:image" content="${SITE}assets/img/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="The Bhoza B monogram">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@MissBhoza">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -340,7 +340,7 @@ const pages = [
 for (const p of pages) { const page = layout(p), i = page.indexOf('<body'); fs.writeFileSync(`dist/${p.file}`, page.slice(0, i) + brand(page.slice(i))); }
 fs.copyFileSync('src/site.css', 'dist/assets/css/site.css');
 fs.copyFileSync('src/site.js', 'dist/assets/js/site.js');
-fs.copyFileSync('src/logo/favicon.svg', 'dist/assets/img/favicon.svg'); fs.copyFileSync('src/logo/apple-touch-icon.png', 'dist/assets/img/apple-touch-icon.png');
+fs.copyFileSync('src/logo/og.jpg', 'dist/assets/img/og.jpg'); fs.copyFileSync('src/logo/favicon.svg', 'dist/assets/img/favicon.svg'); fs.copyFileSync('src/logo/apple-touch-icon.png', 'dist/assets/img/apple-touch-icon.png');
 fs.writeFileSync('dist/robots.txt', `User-agent: *\nAllow: /\nSitemap: ${SITE}sitemap.xml\n`);
 fs.writeFileSync('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.filter((p) => p.file !== '404.html').map((p) => `  <url><loc>${SITE}${p.file === 'index.html' ? '' : p.file}</loc></url>`).join('\n')}\n</urlset>\n`);
 console.log('built', pages.map((p) => p.file).join(', '));
