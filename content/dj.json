@@ -1,0 +1,33 @@
+{
+  "sound": "Soulful, deep and afro house, with gospel and classic soul when the room is ready for it.",
+  "soundPlaceholder": true,
+  "profileImage": "",
+  "profileImageLabel": "DJ Bhoza behind the decks, mid-set",
+  "appearances": [
+    { "date": "2026", "event": "Soul Connex", "place": "Johannesburg", "placeholder": true },
+    { "date": "2026", "event": "The Ultimate Camping Experience", "place": "Location to confirm", "placeholder": true },
+    { "date": "2025", "event": "Gospel Brunch", "place": "Johannesburg", "placeholder": true },
+    { "date": "2025", "event": "Festival or club night", "place": "City to confirm", "placeholder": true },
+    { "date": "2025", "event": "Brand activation", "place": "City to confirm", "placeholder": true },
+    { "date": "2024", "event": "Radio or streaming guest mix", "place": "Station to confirm", "placeholder": true }
+  ],
+  "gallery": [
+    { "image": "", "label": "Behind the decks" },
+    { "image": "", "label": "Crowd from the booth" },
+    { "image": "", "label": "Hands on the mixer" },
+    { "image": "", "label": "On the mic" }
+  ],
+  "video": { "youtube": "", "vimeo": "", "title": "DJ Bhoza live set" },
+  "roster": ["DJ Ganyani", "DJ Josi Chave", "Ismail Abrahams"],
+  "experience": [
+    { "title": "Audwax", "note": "Presenter" },
+    { "title": "DYR", "note": "Presenter" },
+    { "title": "Wits University", "note": "Music industry qualification" },
+    { "title": "Female DJ Network", "note": "Partner" }
+  ],
+  "partners": [
+    { "title": "Partner or collaborator", "note": "Placeholder: brand, label, venue or festival", "placeholder": true },
+    { "title": "Partner or collaborator", "note": "Placeholder: brand, label, venue or festival", "placeholder": true },
+    { "title": "Partner or collaborator", "note": "Placeholder: brand, label, venue or festival", "placeholder": true }
+  ]
+}

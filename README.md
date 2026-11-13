@@ -1,31 +1,134 @@
-# Bhoza.co.za concept site
+# Bhoza Mphela: personal brand website
 
-Concept redesign for Bhoza Mphela (bhoza.co.za). Static HTML, CSS and JS. No framework.
+Concept build of Bhoza Mphela's central digital home: marketing, music, events, speaking, ventures and The Bhoza Lifestyle.
+Plain HTML, CSS and vanilla JavaScript, generated from simple content files by a small Node build script. No framework.
 
-Concept: "Bhoza" is the one in charge, so the site is the tagline taken literally: Bhoza means business, and Bhoza means culture. Gig-poster layout. See `DESIGN.md`.
+- Live concept: https://missbhoza.mrpoint.online
+- Design notes: [`DESIGN.md`](DESIGN.md)
+- Everything still to be supplied or confirmed: [`TODO.md`](TODO.md)
 
-## Deploy (Cloudflare Pages)
+---
 
-- Build command: none
-- Build output directory: `dist`
+## Editing content (no developer needed)
 
-`dist/` is committed, so Pages can serve it as-is.
+All words, lists, links and photos live in **`/content`**. Change a file, commit, and Cloudflare Pages rebuilds the site in about a minute.
 
-## Edit
+| File | What it controls |
+|---|---|
+| `content/site.json` | Name, tagline, home headline and intro, email, phone, social links, store link, enquiry categories, analytics ID, footer credit |
+| `content/expertise.json` | The "One name, many rooms" list on the home page |
+| `content/events.json` | Soul Connex, The Ultimate Camping Experience, Gospel Brunch: summary, facts, story, gallery, video. Each gets its own page at `/events/<slug>/` |
+| `content/projects.json` | Projects and ventures: name, category, role, description, logo, website link |
+| `content/dj.json` | DJ Bhoza: sound, appearances, gallery, video, artist roster, industry experience, partners |
+| `content/speaking.json` | Talk topics, formats, engagements, interviews and media, videos |
+| `content/pages/*.md` | Page headings, intros and longer text (About biography, Marketing services and process, Music sections, Lifestyle text, Contact intro). The part between the `---` lines is settings; below it is ordinary Markdown |
 
-All copy lives at the top of `build.mjs` (services, socials); page copy is in the page blocks below it. Styles are in `src/site.css`, behaviour in `src/site.js`.
+### Common edits
+
+- **Add a photo.** Put the image in `images/uploads/` (JPG or PNG, at least 1600px on the long side), then write its path, e.g. `"/images/uploads/soul-connex-crowd.jpg"`, into the `image` field that currently says `""`. The placeholder block is replaced automatically. The build makes fast WebP versions, so upload the original.
+- **Add an appearance, engagement or media feature.** Copy an existing `{ ... }` entry in the list, edit it, and remove `"placeholder": true` once it is confirmed (that flag shows a small "To confirm" tag on the site).
+- **Add a video.** Paste the YouTube ID (the part after `v=` in the link) into `"youtube"`, or a Vimeo number into `"vimeo"`. Videos only load when a visitor presses play.
+- **Add an event.** Copy one event in `content/events.json`, give it a new `slug` (lowercase, dashes, e.g. `"winter-sessions"`) and it gets its own page.
+- **Change the store link.** `shopUrl` in `content/site.json`.
+- **Hide a social network.** Leave its `url` empty.
+
+JSON needs straight double quotes and commas between entries. If a build fails after an edit, the Cloudflare build log points to the line.
+
+### Content manager at `/admin` (optional)
+
+[Decap CMS](https://decapcms.org) is wired up at `/admin/`: a simple form-based editor for every file above, with image uploads. It commits to GitHub, which triggers a rebuild.
+
+To switch it on (one-time, about 15 minutes):
+
+1. Create a GitHub OAuth App (GitHub → Settings → Developer settings → OAuth Apps). Callback URL: the OAuth proxy URL below plus `/callback`.
+2. Deploy a free Decap OAuth proxy on Cloudflare Workers, e.g. [`sterlingwes/decap-proxy`](https://github.com/sterlingwes/decap-proxy), with the OAuth App's client ID and secret.
+3. In `admin/config.yml`, set `base_url:` to the Worker URL and check `repo:` and `branch:`.
+4. Give the client a GitHub account with write access to the repository.
+
+---
+
+## Running locally
+
+Needs Node 20 or newer.
 
 ```bash
 npm install
-node prep.mjs     # only when the portrait or libraries change: crops images, copies fonts and libraries into dist/
-node build.mjs    # writes the pages into dist/
-node shoot.mjs    # optional QA: screenshots + accessibility report in .shots/ (needs: npx playwright install chromium)
+npm run dev        # builds into dist/ and serves http://localhost:4400 (the contact form works locally and logs enquiries to the terminal)
 ```
 
-## Before launch
+Other scripts:
 
-- Confirm the credits with Bhoza (artists, brands, radio, Wits, Female DJ Network). They come from her public Music In Africa profile.
-- Confirm the line "In kasi slang, a bhoza is the one in charge".
-- Add LinkedIn and Facebook profile URLs in `build.mjs` (only the handles were on the old site).
-- Swap in a high-resolution original of the portrait (`src/portrait-original.jpg`, `src/street-original.jpg`) and confirm photo credits.
-- The merch strip on the home page is a placeholder until the store is live.
+```bash
+npm run build      # build only
+npm run qa         # screenshots + accessibility/performance report in .shots/ (needs Playwright with Chromium)
+node scripts/icons.mjs   # re-render favicons and the social sharing image (only if the brand changes)
+```
+
+## Project structure
+
+```
+content/            ← all editable content (JSON + Markdown)
+images/             ← photos (originals); images/uploads/ for new ones
+src/site.css        ← all styles; design tokens at the top
+src/site.js         ← menu, role line, reveals, lightbox, video, form, analytics
+src/fonts/ src/icons/
+functions/api/contact.js   ← enquiry form handler (Pages Function; also used by the Worker)
+worker/index.js     ← Workers entry: serves dist/, routes /api/contact
+wrangler.jsonc      ← Cloudflare Workers config
+admin/              ← Decap CMS
+build.mjs           ← renders every page, resizes images, writes sitemap, robots, _headers
+scripts/            ← local server, QA, icon renderer
+dist/               ← build output (not committed)
+```
+
+## Contact form
+
+The enquiry form posts to `/api/contact` (`worker/index.js` on Workers, or the Pages Function on Pages) which emails the enquiry through [Resend](https://resend.com) (free tier: 3,000 emails a month). It validates in the browser and on the server, has a spam honeypot, and works without JavaScript.
+
+In Cloudflare → the `bhoza` project → Settings → Variables and Secrets, add:
+
+| Name | Value |
+|---|---|
+| `RESEND_API_KEY` (secret) | API key from Resend |
+| `CONTACT_TO` | **TODO:** Bhoza's enquiries inbox |
+| `CONTACT_FROM` | A sender on a domain verified in Resend, e.g. `Bhoza Mphela website <enquiries@bhoza.co.za>` |
+
+Rather use Formspree? Paste the Formspree form URL into `formEndpoint` in `content/site.json`. The function is then ignored.
+
+## Analytics
+
+One value: `analytics` in `content/site.json`.
+
+- A Google Analytics 4 ID (`G-XXXXXXX`) loads GA4.
+- Anything else is treated as a Cloudflare Web Analytics token.
+- Empty means no analytics. (Cloudflare Web Analytics can also be switched on in the Pages dashboard with no code at all.)
+
+## Deploying to Cloudflare
+
+The repository includes `wrangler.jsonc`, so it deploys as a **Cloudflare Worker with static assets** (the current `bhoza` project). Wrangler runs `npm run build` itself, serves `dist/` (with `_headers`, `_redirects` and the 404 page) and routes `/api/contact` to the form handler in `worker/index.js`.
+
+### Workers project (current setup)
+
+1. Cloudflare dashboard → Workers & Pages → `bhoza` → Settings → Builds: connected to this repository.
+   - Build command: *(leave empty; wrangler runs the build from `wrangler.jsonc`)* or `npm run build`
+   - Deploy command: `npx wrangler deploy`
+   - Environment variable: `NODE_VERSION` = `22` (also set by `.nvmrc`)
+2. Settings → Variables and Secrets: add `RESEND_API_KEY` (secret), `CONTACT_TO`, `CONTACT_FROM`. Redeploy.
+3. Settings → Domains & Routes → Add → Custom domain → `missbhoza.mrpoint.online`. With `mrpoint.online` on Cloudflare DNS the record is created for you.
+4. Pull requests get preview builds; merging to `main` deploys production.
+
+Test the Worker locally exactly as it runs on Cloudflare:
+
+```bash
+npx wrangler dev --var DEV_ECHO:1
+```
+
+### Pages project (alternative)
+
+Framework preset **None**, build command **`npm run build`**, output directory **`dist`**, `NODE_VERSION` = `22`. The form handler in `functions/api/contact.js` runs as a Pages Function automatically. Add the same variables and the custom domain under the Pages project.
+
+### Either way
+
+If the final domain changes (e.g. `bhoza.co.za`), update `siteUrl` in `content/site.json`, or set a `SITE_URL` environment variable, so canonical links, the sitemap and social cards use it.
+
+`_headers` (security headers, CSP, caching), `_redirects`, `robots.txt`, `sitemap.xml` and the web manifest are generated on every build.

@@ -1,0 +1,36 @@
+{
+  "name": "Bhoza Mphela",
+  "tagline": "Soul. Style. Substance.",
+  "headline": "Creative Industry Big Sista.",
+  "intro": "A multi-disciplinary creative professional working at the intersection of marketing, music, entertainment, culture and entrepreneurship.",
+  "location": "Johannesburg, South Africa",
+  "since": "2003",
+  "siteUrl": "https://missbhoza.mrpoint.online",
+  "email": "missbhoza@bhoza.co.za",
+  "phone": "",
+  "shopUrl": "https://shop.bhoza.co.za",
+  "formEndpoint": "",
+  "analytics": "",
+  "heroImage": "/images/bhoza-portrait.jpg",
+  "heroImageAlt": "Bhoza Mphela in a black tuxedo suit, seated in a wooden chair under a single studio light, one hand raised to her hair.",
+  "ogImage": "/images/og.jpg",
+  "roles": ["marketer", "DJ", "MC", "artist manager", "event curator", "speaker", "businesswoman"],
+  "socials": [
+    { "name": "Instagram", "handle": "@MissBhoza", "url": "https://www.instagram.com/MissBhoza" },
+    { "name": "LinkedIn", "handle": "Bhoza Mphela", "url": "" },
+    { "name": "X", "handle": "@MissBhoza", "url": "https://x.com/MissBhoza" },
+    { "name": "TikTok", "handle": "@MissBhoza01", "url": "https://www.tiktok.com/@MissBhoza01" },
+    { "name": "Facebook", "handle": "Bhoza Mphela", "url": "" },
+    { "name": "YouTube", "handle": "", "url": "" }
+  ],
+  "enquiries": [
+    { "key": "marketing", "label": "Marketing and consulting", "desc": "Strategy, positioning, campaigns and advisory work for brands and creative businesses." },
+    { "key": "dj", "label": "DJ bookings", "desc": "Sets for private events, brand activations, clubs and festivals." },
+    { "key": "mc", "label": "MC and hosting bookings", "desc": "Hosting for events, launches, award shows, conferences and ceremonies." },
+    { "key": "speaking", "label": "Speaking engagements", "desc": "Keynotes, panels, workshops, moderation and media interviews." },
+    { "key": "events", "label": "Event collaborations", "desc": "Co-curating, producing or partnering on an experience." },
+    { "key": "partnerships", "label": "Partnerships and sponsorships", "desc": "Brand partnerships across her events, ventures and platforms." },
+    { "key": "general", "label": "General business enquiries", "desc": "Anything else. It will reach the right desk." }
+  ],
+  "credit": { "text": "Concept website by Pablo Lebelo", "site": "mrpoint.online", "siteUrl": "https://mrpoint.online", "phone": "+27 60 452 1037" }
+}

@@ -1,55 +1,58 @@
-# Bhoza.co.za concept — DESIGN.md
+# DESIGN.md: Bhoza Mphela, v3 (brand brief)
+
+Locked system for this site. New pages reuse these tokens, type roles and components; `src/site.css` is the source of truth.
+(v1 "run of show" and v2 "gig poster" concepts are in git history at `56d1b64`. v3 replaces them to follow the client's brand brief.)
 
 ## Brief
-Subject: Bhoza Mphela (@MissBhoza), Johannesburg. Marketing, events, artist management, social, MC/DJ/speaker, consulting.
-Audience: brands, event organisers, artists, conference bookers. Job: get booked.
-Assets: one black and white studio portrait (supplied), copy from the current holding page, public Music In Africa bio.
-Stack: hand-written static HTML/CSS/JS built by `build.mjs` (GSAP + Lenis, self-hosted fonts). Reason: content-only showcase, deploys to Cloudflare Pages as-is, no framework runtime.
+
+- **Subject:** Bhoza Mphela, Johannesburg. Marketer, DJ, MC, artist manager (since 2003), event curator, speaker, businesswoman. Tagline: Soul. Style. Substance.
+- **Audience:** brands, event organisers, conference bookers, media, collaborators.
+- **Job:** enquire and book. Three primary actions everywhere: Work with Bhoza, Book a set, Speaking enquiry.
+- **Constraints from the brief:** fixed palette and fonts, editorial and spacious, distinctly African without stereotypes, subtle motion only, no stock or AI imagery, not an e-commerce site.
+- **Material:** *real* = name, tagline, headline, roles, Johannesburg, 2003, radio/roster/Wits/Female DJ Network credits (to confirm), event and venture names, two real photos. *Pictures* = studio portrait (hero, About, OG), street look (Lifestyle). *Absent* = event, DJ and stage photos, logos, metrics, testimonials, case studies. All absent material is a labelled slot, never invented.
 
 ## Concepts considered
-1. Run of show (name + profession): "bhoza" = the one in charge; she holds the running order. Site is a stage manager's run sheet lit by one follow-spot. Anchor: she manages, builds, markets AND hosts the night. Orig 4 / fit 5 / feasible 5 / portable 2. PICKED.
-2. Mixing desk: six services as six channel faders. Anchor: she DJs. Orig 3 / fit 3 / feasible 4 / portable 4 (any DJ).
-3. Contact sheet: film-strip of the portrait session. Anchor: the photo. Orig 2 / fit 2 / feasible 5 / portable 5.
-Picked 1: only someone who both runs the night and hosts it can own it.
+
+1. **Not one title** (her positioning taken literally). Her name stays fixed, and the line beside it never settles on one job. Anchor: the brief's core message that she is not defined by one title. Orig 4, fit 5, feasible 5, portable 2. **Picked.**
+2. **The programme.** Each page set like a printed event programme with running order and credits. Anchor: she curates and MCs. Orig 3, fit 4, feasible 4, portable 3. Too close to the v1 run-of-show idea the client moved away from.
+3. **Two sides.** Business and culture split screens. Anchor: her tagline. Already done in v2; the client asked for calmer.
 
 ## Concept card
-Idea:        Bhoza is the one in charge, so her site is the running order of a show, lit by a single follow-spot.
-Metaphor:    Stage management: cues, standby/go, house lights, one lamp.
-Signature:   The follow-spot. One light position drives the portrait reveal, the lit headline, row highlights and the footer; it drifts on its own when the pointer rests.
-Emotion:     House lights drop, a lamp snaps onto her. Presence.
-Motion verb: Cut like a lighting cue: snap on fast, fade out slow.
-Screenshot:  Dark stage, her face in the beam, BHOZA across the floor.
+
+```
+Idea:        Bhoza Mphela is not one job title, so her name stays still while her roles take turns beside it.
+Metaphor:    A magazine profile: one portrait, a name in serif, the roles as the standfirst.
+Signature:   Hero role line: "Bhoza Mphela, marketer." The italic role settles up and is replaced every 2.4s (DJ, MC, artist manager...). The same words become the "One name, many rooms" index that links to each discipline.
+Emotion:     Composed, confident, warm. A portrait you trust before you read.
+Motion verb: Settle. Things rise 10px and come to rest (600-700ms, one ease). Gold lines draw across. Nothing bounces.
+Screenshot:  Ivory page, "Creative Industry Big Sista." in Cormorant with "Big Sista." in gold italic, the black-and-white tuxedo portrait beside it.
+```
 
 ## System
-Palette: ground #0b0a09, ink #f2ede4, muted #9a9388, line #2b2824, paper #e8e1d3 (+ paper-ink #14120f), standby #ff4a2b, go #42d77d (cue lights only).
-Type: Bricolage Grotesque variable (display at wdth 75 / wght 800, body at wdth 100 / wght 400); DM Mono for cue labels and the clock.
-Grid: 12 col, 24px gutter, 4vw margin. Everything hangs off column 1 or column 7.
-Shape: square corners everywhere; the only circles are the beam and the cue lamps.
-Motion: expo.out 0.5-0.9s in, power2.in 0.25s out; stagger 40-60ms. One clock (gsap.ticker).
-Idle: the spot drifts in a slow figure around its home mark. Reduced motion: full wash, no drift, no smooth scroll.
 
-## Composition
-Home: hero (portrait right, word across the floor) / statement (big text col 1-10) / running order (6 cue rows) / credits on paper (2-col end credits) / off stage (detail crop + text) / merch strip / footer call.
-What I do: title / six cue blocks alternating col 1 and col 7 / call.
-About: split portrait + bio / pull quote / cue history table.
-Book: split form + direct lines.
-404: the spot searching an empty stage.
+- **Palette (tokens in `:root`):** charcoal `#252522` (text, nav, dark bands), ivory `#F4F0E8` (ground), antique gold `#A58A5C` (hairlines, hover fills, accents on dark), sage `#737866` → `--sage-deep #4E5245` for the Lifestyle band, warm sand `#D6C9B8` (secondary sections, placeholders).
+  AA fixes: gold text on ivory uses `--gold-ink #7A6440` (4.96:1); secondary text `--muted #5C5B54` (6:1); on charcoal `--muted-dark #B8B2A6` (7.3:1). Sections re-map role tokens (`--fg`, `--fg-2`, `--accent-ink`, `--rule`) through `.tone-*` and `.on-dark`.
+- **Type:** Cormorant Garamond (variable, self-hosted) for display, headings, leads and lists of names; Inter (variable) for body, UI and labels. Fluid scale: display 3.1–7rem, h1 2.6–5.75rem, h2 2–3.6rem, h3 1.5–1.95rem, lead 1.35–1.85rem serif, body 17px/1.6. Negative tracking on display only. Labels are Inter 14px sentence case, never tracked caps. Italic is used for multi-word phrases only. Metric-matched fallbacks (`size-adjust`) keep CLS at 0 while fonts load.
+- **Grid:** 12 columns, `minmax(0, 1fr)`, gutter 16–32px, side margin 20–80px, container capped at 1440px. Recurring split: heading in columns 1–4 (sticky on desktop), content in 5–12.
+- **Shape:** square corners everywhere (`--radius: 0`). Hairline rules (1px) do the structural work.
+- **Rhythm:** sections alternate ivory, sand, charcoal and sage-deep; never two photo-led sections in a row.
+- **Motion:** one ease `cubic-bezier(.22,.7,.18,1)`. Buttons: gold fill settles up from the bottom edge. Index rows: title shifts 0.6rem, gold rule draws across, arrow nudges. Text links: gold line draws over a resting underline. Cards: image scales to 1.03. Reveals: opacity + 10px, once. Under `prefers-reduced-motion`: no reveals, no role cycling (the full role list shows as text), no smooth scroll.
+- **Idle:** the role line is the only thing that moves at rest; it pauses on hover, off screen and in background tabs.
 
-## Change log
-- Pointer-tracking follow-spot switched off at the client's request (`SPOT = false` in src/site.js). Portraits and headlines are evenly lit; the code path is kept so it can return later.
+## Components
 
-## v2 (client feedback: sections looked generic; keep the hero)
-Idea:        Her own tagline, taken literally: Bhoza means business, and Bhoza means culture.
-Metaphor:    A gig poster. Flat colour blocks, condensed caps against a fashion italic, a line-up set like a festival bill.
-Signature:   The pinned "two sides" section: scroll cuts the suit to the street and "business." to "culture."
-Motion verb: Cut. Straight-edged wipes from the bottom edge (curtain, images, buttons). Nothing follows the pointer.
-Idle:        The ticker band keeps rolling.
-Palette:     black #0b0a09, charcoal #1c1a17, bone #ece6d9, hot red #ff4a2b (the hero's lamp colour, now the block colour).
-Type:        Bricolage Grotesque condensed 800 (poster caps), Bodoni Moda italic (the second voice), DM Mono (labels).
-Kept:        v1 hero, unchanged in layout, at the client's request. Dropped: cue bar, running-order list, feet crop.
-Sections:    hero / statement + ticker / two sides (pinned) / six stacked posters tagged Business or Culture / line-up bill / story with street photo / red footer.
+`btn` (solid / ghost / light / ghost-light), `tl` text link, `al` action link, `idx` index rows (linked or static), `rows` (date / title / meta lists), `facts` (dl), `media` + `ph` (fixed-ratio image or labelled placeholder: swapping a real photo never shifts layout), `gal` + lightbox (`<dialog>`, keyboard, swipe), `video` facade (YouTube nocookie / Vimeo, loads on click), `cta` band, enquiry `form` (inline validation, error summary, success state, no-JS fallback).
 
-## Mobile layer (phone only, 900px and below)
-- The dock: fixed thumb-zone bar. Menu (opens a bottom-aligned red sheet) | live side label (Business / Culture, follows the pinned section and the poster rail) | Book. Steps aside when a form field is focused. Haptic tick on side flips and poster snaps (Android).
-- The rail: six services as a swipe deck (CSS scroll-snap, works without JS). Segmented bar below alternates black (business) and red (culture) to mirror the stack's order. Hint arrow nudges until first swipe.
-- Desktop and the v1 hero are untouched.
+## Pages
+
+Home (hero / statement / expertise index / featured experiences + ventures strip / credits / Lifestyle band / enquiry index) · About (split hero / bio sections with sticky headings / quote band / milestones / achievements / CTA) · Marketing (wide hero / services rows / dark process 01–05 / selected work) · Music (dark hero + in-page nav / DJ + appearances / gallery + video / MC on sand / management roster / experience / partners) · Events (capabilities / alternating features) + one page per event (facts, story, gallery, video, next event) · Speaking (topics / formats / engagements + media / videos / embedded enquiry form) · Ventures (logo slot + details per venture, Lifestyle last) · Lifestyle (editorial only, store link opens the separate shop) · Contact (enquiry picker + form) · 404.
+
+## Hallmark picks
+
+- **Shape:** profile site, genre editorial, job: enquire/book; actions in the header, hero, footer and every page's closing band.
+- **Theme:** custom by brief. Ivory-dominant, charcoal and sand bands, one gold accent; serif voice over Inter; flat surfaces, hairline rules.
+- **Chrome:** sticky ivory header with name and tagline, seven links and a "Work with Bhoza" button (menu below 1200px); charcoal footer with tagline, three CTAs, four link columns, credit line.
+- **Hero:** text left (headline, role line, one sentence, three actions), portrait right; all visible at 1280×800.
+- **Signature:** the role line beside the portrait.
+- **Material:** see Brief.
+- **Sweep:** Floor checked by hand (no Hallmark lint scripts bundled). 0 colour literals past the token block, no `transition: all`, `overflow-x: clip` on html and body, focus-visible on every control, reduced-motion fallbacks, no eyebrows or tracked caps, no arrows glued to link text, no middots, no invented metrics or logos.

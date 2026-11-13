@@ -1,0 +1,82 @@
+{
+  "items": [
+    {
+      "slug": "soul-connex",
+      "title": "Soul Connex",
+      "kind": "Music experience",
+      "summary": "A gathering for people who love soulful music: DJs who play with feeling, a crowd that listens, and a room that feels like a reunion.",
+      "image": "",
+      "imageLabel": "Soul Connex: the crowd at its peak, wide shot",
+      "featured": true,
+      "placeholder": true,
+      "facts": [
+        { "label": "Format", "value": "Day-to-night music experience" },
+        { "label": "Where", "value": "Johannesburg (venue to confirm)" },
+        { "label": "Since", "value": "Year to confirm" },
+        { "label": "Role", "value": "Founder and curator" }
+      ],
+      "body": "Soul Connex started with a simple idea: soulful music deserves a room built around it. Every edition is curated like a set, with a line-up chosen for how the artists sit next to each other, a space chosen for how it sounds, and hospitality chosen for how it makes people stay.\n\nThe result is an audience that returns, partners who see real engagement, and artists who get to play the records they love for people who came to hear them.",
+      "gallery": [
+        { "image": "", "label": "DJ booth, close" },
+        { "image": "", "label": "Dance floor, golden hour" },
+        { "image": "", "label": "Guests arriving" },
+        { "image": "", "label": "Bhoza on the mic" },
+        { "image": "", "label": "Detail: decor and light" },
+        { "image": "", "label": "Crowd, end of night" }
+      ],
+      "video": { "youtube": "", "vimeo": "", "title": "Soul Connex highlights" }
+    },
+    {
+      "slug": "the-ultimate-camping-experience",
+      "title": "The Ultimate Camping Experience",
+      "kind": "Outdoor experience",
+      "summary": "A weekend out of the city with music, food and good company under open sky. Everything is handled, so the only plan is to arrive.",
+      "image": "",
+      "imageLabel": "Campsite at dusk, tents lit, wide landscape",
+      "featured": true,
+      "placeholder": true,
+      "facts": [
+        { "label": "Format", "value": "Weekend camping experience" },
+        { "label": "Where", "value": "Location to confirm" },
+        { "label": "Since", "value": "Year to confirm" },
+        { "label": "Role", "value": "Founder and curator" }
+      ],
+      "body": "The Ultimate Camping Experience takes the things people love about a great night out and moves them outdoors for a full weekend. Tents are pitched, meals are cooked, the sound system is set up and the programme runs from sunrise coffee to late-night sets.\n\nIt is designed for people who want the outdoors without the admin, and for brands who want time with an audience that is relaxed, present and paying attention.",
+      "gallery": [
+        { "image": "", "label": "Tents at golden hour" },
+        { "image": "", "label": "Sunset set" },
+        { "image": "", "label": "Long-table dinner" },
+        { "image": "", "label": "Morning coffee" },
+        { "image": "", "label": "Fire and stars" },
+        { "image": "", "label": "Group photo" }
+      ],
+      "video": { "youtube": "", "vimeo": "", "title": "The Ultimate Camping Experience film" }
+    },
+    {
+      "slug": "gospel-brunch",
+      "title": "Gospel Brunch",
+      "kind": "Sunday experience",
+      "summary": "Good food, live praise and a Sunday afternoon that lifts the whole week. Gospel music in a setting made for gathering.",
+      "image": "",
+      "imageLabel": "Gospel Brunch: choir and long tables, daylight",
+      "featured": true,
+      "placeholder": true,
+      "facts": [
+        { "label": "Format", "value": "Sunday brunch with live gospel" },
+        { "label": "Where", "value": "Johannesburg (venue to confirm)" },
+        { "label": "Since", "value": "Year to confirm" },
+        { "label": "Role", "value": "Founder and curator" }
+      ],
+      "body": "Gospel Brunch brings together two Sunday traditions: sharing a good meal and lifting your voice. Families, friends and colleagues sit at long tables while live performers and DJs carry the afternoon from worship to celebration.\n\nIt is a dressed-up, warm, intergenerational event, and a natural home for partners in food, fashion, lifestyle and faith-based media.",
+      "gallery": [
+        { "image": "", "label": "Live performance" },
+        { "image": "", "label": "Tables set for brunch" },
+        { "image": "", "label": "Guests in their Sunday best" },
+        { "image": "", "label": "The choir" },
+        { "image": "", "label": "Food detail" },
+        { "image": "", "label": "Full room" }
+      ],
+      "video": { "youtube": "", "vimeo": "", "title": "Gospel Brunch highlights" }
+    }
+  ]
+}
