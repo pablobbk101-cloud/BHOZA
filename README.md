@@ -72,7 +72,9 @@ images/             ← photos (originals); images/uploads/ for new ones
 src/site.css        ← all styles; design tokens at the top
 src/site.js         ← menu, role line, reveals, lightbox, video, form, analytics
 src/fonts/ src/icons/
-functions/api/contact.js   ← Cloudflare Pages Function for the enquiry form
+functions/api/contact.js   ← enquiry form handler (Pages Function; also used by the Worker)
+worker/index.js     ← Workers entry: serves dist/, routes /api/contact
+wrangler.jsonc      ← Cloudflare Workers config
 admin/              ← Decap CMS
 build.mjs           ← renders every page, resizes images, writes sitemap, robots, _headers
 scripts/            ← local server, QA, icon renderer
@@ -81,9 +83,9 @@ dist/               ← build output (not committed)
 
 ## Contact form
 
-The enquiry form posts to `/api/contact` (a Cloudflare Pages Function) which emails the enquiry through [Resend](https://resend.com) (free tier: 3,000 emails a month). It validates in the browser and on the server, has a spam honeypot, and works without JavaScript.
+The enquiry form posts to `/api/contact` (`worker/index.js` on Workers, or the Pages Function on Pages) which emails the enquiry through [Resend](https://resend.com) (free tier: 3,000 emails a month). It validates in the browser and on the server, has a spam honeypot, and works without JavaScript.
 
-In Cloudflare Pages → the project → Settings → Variables and Secrets, add:
+In Cloudflare → the `bhoza` project → Settings → Variables and Secrets, add:
 
 | Name | Value |
 |---|---|
@@ -101,18 +103,32 @@ One value: `analytics` in `content/site.json`.
 - Anything else is treated as a Cloudflare Web Analytics token.
 - Empty means no analytics. (Cloudflare Web Analytics can also be switched on in the Pages dashboard with no code at all.)
 
-## Deploying to Cloudflare Pages
+## Deploying to Cloudflare
 
-1. Cloudflare dashboard → Workers & Pages → Create → Pages → Connect to Git → choose this repository.
-2. Build settings:
-   - Framework preset: **None**
-   - Build command: **`npm run build`**
-   - Build output directory: **`dist`**
-   - Root directory: *(leave empty)*
+The repository includes `wrangler.jsonc`, so it deploys as a **Cloudflare Worker with static assets** (the current `bhoza` project). Wrangler runs `npm run build` itself, serves `dist/` (with `_headers`, `_redirects` and the 404 page) and routes `/api/contact` to the form handler in `worker/index.js`.
+
+### Workers project (current setup)
+
+1. Cloudflare dashboard → Workers & Pages → `bhoza` → Settings → Builds: connected to this repository.
+   - Build command: *(leave empty; wrangler runs the build from `wrangler.jsonc`)* or `npm run build`
+   - Deploy command: `npx wrangler deploy`
    - Environment variable: `NODE_VERSION` = `22` (also set by `.nvmrc`)
-3. Save and deploy. Every push to the production branch redeploys; other branches get preview URLs.
-4. Add the form variables above, then redeploy once.
-5. Custom domain: the project → Custom domains → Set up a custom domain → `missbhoza.mrpoint.online`. If `mrpoint.online` is on Cloudflare DNS, the CNAME is added for you; otherwise add a `CNAME` record `missbhoza` → `<project>.pages.dev` at your DNS host.
-6. If the final domain changes (e.g. `bhoza.co.za`), update `siteUrl` in `content/site.json`, or set a `SITE_URL` environment variable, so canonical links, the sitemap and social cards use it.
+2. Settings → Variables and Secrets: add `RESEND_API_KEY` (secret), `CONTACT_TO`, `CONTACT_FROM`. Redeploy.
+3. Settings → Domains & Routes → Add → Custom domain → `missbhoza.mrpoint.online`. With `mrpoint.online` on Cloudflare DNS the record is created for you.
+4. Pull requests get preview builds; merging to `main` deploys production.
+
+Test the Worker locally exactly as it runs on Cloudflare:
+
+```bash
+npx wrangler dev --var DEV_ECHO:1
+```
+
+### Pages project (alternative)
+
+Framework preset **None**, build command **`npm run build`**, output directory **`dist`**, `NODE_VERSION` = `22`. The form handler in `functions/api/contact.js` runs as a Pages Function automatically. Add the same variables and the custom domain under the Pages project.
+
+### Either way
+
+If the final domain changes (e.g. `bhoza.co.za`), update `siteUrl` in `content/site.json`, or set a `SITE_URL` environment variable, so canonical links, the sitemap and social cards use it.
 
 `_headers` (security headers, CSP, caching), `_redirects`, `robots.txt`, `sitemap.xml` and the web manifest are generated on every build.

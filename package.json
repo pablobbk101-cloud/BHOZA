@@ -10,7 +10,9 @@
     "dev": "node build.mjs && node scripts/serve.mjs",
     "qa": "node scripts/qa.mjs"
   },
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "js-yaml": "^4.1.0",
     "marked": "^15.0.0",
@@ -19,6 +21,7 @@
   "devDependencies": {
     "@fontsource-variable/cormorant-garamond": "^5.2.0",
     "@fontsource-variable/inter": "^5.2.0",
-    "axe-core": "^4.10.0"
+    "axe-core": "^4.10.0",
+    "wrangler": "^4.161.0"
   }
 }

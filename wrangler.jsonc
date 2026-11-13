@@ -1,0 +1,19 @@
+// Cloudflare Workers config: builds the static site, serves dist/, and runs the contact form handler.
+// Works for both a Workers project (npx wrangler deploy) and local preview (npx wrangler dev).
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bhoza",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-10-01",
+  "build": { "command": "npm run build" },
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+  "observability": { "enabled": true }
+  // Secrets / variables for the form (set in the dashboard: Worker > Settings > Variables and Secrets):
+  //   RESEND_API_KEY (secret), CONTACT_TO, CONTACT_FROM
+}
